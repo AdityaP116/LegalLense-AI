@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-container-low":"#f2f3ff","surface-container-highest":"#dae2fd","secondary-fixed":"#85f8c4","on-tertiary-fixed":"#2f1500","on-tertiary-fixed-variant":"#6e3900","error":"#ba1a1a","secondary-container":"#82f5c1","tertiary-fixed":"#ffdcc3","primary-fixed-dim":"#b4c5ff","inverse-surface":"#283044","on-secondary-container":"#00714e","surface-container-lowest":"#ffffff","primary-container":"#2563eb","surface-container-high":"#e2e7ff","secondary":"#006c4a","on-primary":"#ffffff","tertiary-container":"#a65900","tertiary-fixed-dim":"#ffb77d","inverse-on-surface":"#eef0ff","outline":"#737686","surface":"#faf8ff","on-secondary":"#ffffff","on-surface-variant":"#434655","primary-fixed":"#dbe1ff","on-background":"#131b2e","on-primary-container":"#eeefff","surface-bright":"#faf8ff","on-surface":"#131b2e","on-error":"#ffffff","on-tertiary":"#ffffff","on-tertiary-container":"#ffede1","surface-tint":"#0053db","secondary-fixed-dim":"#68dba9","primary":"#004ac6","on-error-container":"#93000a","tertiary":"#824500","on-primary-fixed":"#00174b","inverse-primary":"#b4c5ff","on-primary-fixed-variant":"#003ea8","on-secondary-fixed-variant":"#005137","background":"#faf8ff","on-secondary-fixed":"#002114","surface-dim":"#d2d9f4","outline-variant":"#c3c6d7","surface-variant":"#dae2fd","surface-container":"#eaedff","error-container":"#ffdad6"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-sm":"0.5rem","margin-mobile":"1rem","space-lg":"1rem","margin":"1.5rem","space-2xl":"2rem","gutter":"1rem","space-xl":"1.5rem","space-md":"0.75rem","gutter-lg":"1.5rem","space-xs":"0.25rem"},fontFamily:{"citation-code":["JetBrains Mono"],"body-sm":["Inter"],"headline-xl":["Plus Jakarta Sans"],"body-md":["Inter"],"headline-xl-mobile":["Plus Jakarta Sans"],"body-lg":["Inter"],"headline-lg":["Plus Jakarta Sans"],"label-sm":["Inter"],"headline-md":["Plus Jakarta Sans"],"label-md":["Inter"]},fontSize:{"citation-code":["12px",{"lineHeight":"16px","letterSpacing":"-0.01em","fontWeight":"500"}],"body-sm":["13px",{"lineHeight":"20px","fontWeight":"400"}],"headline-xl":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-md":["14px",{"lineHeight":"22px","fontWeight":"400"}],"headline-xl-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"26px","fontWeight":"400"}],"headline-lg":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.03em","fontWeight":"500"}],"headline-md":["18px",{"lineHeight":"26px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 bottom-0 w-64 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-50 flex flex-col justify-between overflow-y-auto"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center gap-space-sm bg-surface-container-lowest"><img alt="LegalLens Brand Mark" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UXUrkdwYKtwVNyRP-nj_KEXPq5JSY9UykcZ9G-jyAQ477vjWBnGlakIDvEFBPIFxsgH8s9Ff-ez8czWkB7TUzGq5KrqXnlOpdsv7TIW7FzK-EElQl-z0pPCn7XgFLOoENgnez8uxWhWkklJJFbf7NZKlXM9ESwvfdM832-9aW1KW3jmBEj0vijY2AUVjIP1B6Kg7G0l9U0dYiCUyos9kIZNvXNcklVDFfVmh-LW1hTTsaFNiSzoMDwQXA"/><div class="flex flex-col"><span class="font-headline-md text-headline-md text-on-surface leading-tight tracking-tight">LegalLens</span><span class="font-label-sm text-label-sm text-on-surface-variant">Evidentiary Engine</span></div></div><div class="px-space-md py-space-sm"><div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-space-xs"><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Active Case</span><div class="flex items-center justify-between gap-space-xs cursor-pointer"><div class="flex items-center gap-space-xs overflow-hidden"><span class="material-symbols-outlined text-primary text-[18px]">folder_managed</span><span class="font-body-sm text-body-sm text-on-surface font-semibold truncate">TechCorp Dispute</span></div><span class="material-symbols-outlined text-on-surface-variant text-[16px]">unfold_more</span></div></div></div><div class="px-space-md py-space-xs"><span class="px-space-xs font-label-sm text-label-sm text-outline uppercase tracking-wider block mb-space-xs">Legal Workflow</span><div class="flex flex-col gap-[2px]"><div class="flex items-center justify-between px-space-xs py-1 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors cursor-pointer"><div class="flex items-center gap-space-xs"><span class="font-citation-code text-citation-code text-secondary font-bold">01</span><span class="font-body-sm text-body-sm">Situation</span></div><span class="material-symbols-outlined text-secondary text-[16px]">check_circle</span></div><div class="flex items-center justify-between px-space-xs py-1 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors cursor-pointer"><div class="flex items-center gap-space-xs"><span class="font-citation-code text-citation-code text-secondary font-bold">02</span><span class="font-body-sm text-body-sm">Documents</span></div><span class="material-symbols-outlined text-secondary text-[16px]">check_circle</span></div><div class="flex items-center justify-between px-space-xs py-1 rounded bg-surface-container text-primary font-medium cursor-pointer"><div class="flex items-center gap-space-xs"><span class="font-citation-code text-citation-code text-primary font-bold">03</span><span class="font-body-sm text-body-sm font-semibold text-on-surface">Evidence Analysis</span></div><span class="px-1.5 py-0.2 bg-error-container text-error rounded-full font-citation-code text-[10px] font-bold leading-tight">2</span></div><div class="flex items-center justify-between px-space-xs py-1 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors cursor-pointer"><div class="flex items-center gap-space-xs"><span class="font-citation-code text-citation-code text-outline">04</span><span class="font-body-sm text-body-sm">Timeline</span></div></div><div class="flex items-center justify-between px-space-xs py-1 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors cursor-pointer"><div class="flex items-center gap-space-xs"><span class="font-citation-code text-citation-code text-outline">05</span><span class="font-body-sm text-body-sm">Questions</span></div></div><div class="flex items-center justify-between px-space-xs py-1 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors cursor-pointer"><div class="flex items-center gap-space-xs"><span class="font-citation-code text-citation-code text-outline">06</span><span class="font-body-sm text-body-sm">Preparation Brief</span></div></div><div class="flex items-center justify-between px-space-xs py-1 rounded text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors cursor-pointer"><div class="flex items-center gap-space-xs"><span class="font-citation-code text-citation-code text-outline">07</span><span class="font-body-sm text-body-sm">Handoff</span></div></div></div></div><div class="px-space-md pt-space-sm"><span class="px-space-xs font-label-sm text-label-sm text-outline uppercase tracking-wider block mb-space-xs">Workspace</span><nav class="flex flex-col gap-1" data-active-classes="bg-primary-container text-on-primary font-semibold rounded-lg"><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[18px]">grid_view</span>Dashboard</a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="my-cases" href="#"><span class="material-symbols-outlined text-[18px]">gavel</span>My Cases</a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="documents" href="#"><span class="material-symbols-outlined text-[18px]">description</span>Documents</a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="evidence-analysis" href="#"><span class="material-symbols-outlined text-[18px]">rule</span>Analysis</a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="timeline" href="#"><span class="material-symbols-outlined text-[18px]">schedule</span>Timeline</a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="questions" href="#"><span class="material-symbols-outlined text-[18px]">help_outline</span>Questions</a><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-1.5 transition-colors bg-primary-container text-on-primary font-semibold rounded-lg" data-path="briefs" href="#"><span class="material-symbols-outlined text-[18px]">history_edu</span>Briefs</a><a class="flex items-center gap-space-sm px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-body-sm text-body-sm" data-path="settings" href="#"><span class="material-symbols-outlined text-[18px]">settings</span>Settings</a></nav></div></div><div class="p-space-md"><div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-space-xs"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-secondary inline-block animate-pulse"></span><span class="font-label-sm text-label-sm text-secondary font-semibold">100% Citation Grounding</span></div><p class="font-label-sm text-label-sm text-on-surface-variant leading-snug">Evidence verified against source OCR records.</p></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 flex items-center justify-between px-gutter-lg"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs font-body-sm text-body-sm text-on-surface-variant"><span class="hover:text-on-surface cursor-pointer">Cases</span><span class="text-outline">/</span><span class="hover:text-on-surface cursor-pointer">TechCorp Dispute</span><span class="text-outline">/</span><span class="text-on-surface font-semibold">Analysis &amp; Evidence</span></div><div class="relative hidden xl:flex items-center"><span class="material-symbols-outlined absolute left-2.5 text-[18px] text-outline pointer-events-none">search</span><input class="w-80 h-9 pl-9 pr-14 bg-surface-container-low text-on-surface placeholder:text-outline rounded-lg text-body-sm font-body-sm focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary" placeholder="Search clauses, citations, facts..." type="text"/><div class="absolute right-2 flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-surface-container text-outline font-citation-code text-[10px]">⌘K</div></div></div><div class="flex items-center gap-space-md"><div class="hidden md:flex items-center gap-space-xs"><button class="h-9 px-space-md rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container font-label-md text-label-md transition-colors flex items-center gap-1.5" type="button"><span class="material-symbols-outlined text-[16px]">upload_file</span>Upload Docs</button><button class="h-9 px-space-md rounded-lg bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md transition-colors flex items-center gap-1.5" type="button"><span class="material-symbols-outlined text-[16px]">add</span>New Case</button></div><button aria-label="Notifications" class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors relative" type="button"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="w-2 h-2 rounded-full bg-error absolute top-1.5 right-1.5"></span></button><div class="flex items-center gap-space-sm pl-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPq2jQGEeh4cj9hhlKdQ03ppdeASIT941NespKLeH25NkmYS7kNaVfaUoL-SxAX7hyjcZOH-dkB99WTWFZU_A5BlJR0jeiXK0XQ6yySEEpL_0WoscAqI7WwkMPFeYFoAipSz3116hsowavbOIGFTVBILyluTk779qTFNjvle5x3ApClCHAd2xc2x-34bthjxC3Tt7l4TsvIMYrZ6LjHZOog1thSuZBtgG0hmhPsy2XC6liCxdfitsj"/><div class="hidden lg:flex flex-col"><span class="font-label-md text-label-md text-on-surface leading-none">Sarah Jenkins</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-none mt-0.5">Legal Ops</span></div></div></div></header><main class="relative pt-16 bg-background min-h-screen w-full px-gutter-lg pb-12"><div class="flex flex-col w-full">
+<!-- Interactive Top Action & Meta Bar -->
+<div class="flex flex-col xl:flex-row xl:items-center justify-between gap-space-lg mb-space-2xl">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs font-citation-code text-citation-code text-primary font-semibold uppercase tracking-wider mb-space-xs">
+<span class="inline-block w-2 h-2 rounded-full bg-secondary"></span>
+        Evidentiary Brief Synthesis · Final Artifact
+      </div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight leading-none">Your Legal Preparation Brief</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1.5 max-w-3xl">
+        A comprehensive, citation-grounded summary ready for review by your attorney or legal adviser. All cross-references are anchored directly to verified OCR record coordinates.
+      </p>
+</div>
+<!-- Quick Actions Group -->
+<div class="flex items-center flex-wrap gap-space-xs shrink-0">
+<button class="h-9 px-space-md rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-md text-label-md flex items-center gap-1.5 shadow-sm" onclick="window.print()" type="button">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">print</span>
+        Print
+      </button>
+<button class="h-9 px-space-md rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-md text-label-md flex items-center gap-1.5 shadow-sm" onclick="alert('Secure encrypted link copied to clipboard. Access valid for 72 hours.')" type="button">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">share</span>
+        Share With Professional
+      </button>
+<button class="h-9 px-space-md rounded-lg bg-surface-container-low text-primary hover:bg-surface-container transition-colors font-label-md text-label-md flex items-center gap-1.5 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">find_in_page</span>
+        Continue Reviewing
+      </button>
+<button class="h-9 px-space-lg rounded-lg bg-primary text-on-primary hover:bg-primary-container transition-all font-label-md text-label-md flex items-center gap-2 shadow-md" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+        Download Brief (PDF)
+      </button>
+</div>
+</div>
+<!-- Metric Quick Ribbon -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-space-md mb-space-2xl">
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold">Grounded Rate</span>
+<span class="material-symbols-outlined text-secondary text-[18px]">verified_user</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-on-surface">100%</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">27 of 27 cited</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1 mt-2 overflow-hidden">
+<div class="bg-secondary h-full rounded-full w-full"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold">Active Conflicts</span>
+<span class="material-symbols-outlined text-error text-[18px]">warning</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-error">2</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Notice &amp; Non-compete</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1 mt-2 overflow-hidden">
+<div class="bg-error h-full rounded-full w-2/3"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold">Corpus Documents</span>
+<span class="material-symbols-outlined text-primary text-[18px]">description</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-on-surface">3 Ingested</span>
+<span class="font-label-sm text-label-sm text-tertiary font-medium">1 gap flagged</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1 mt-2 overflow-hidden">
+<div class="bg-primary h-full rounded-full w-3/4"></div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold">Counsel Prompts</span>
+<span class="material-symbols-outlined text-tertiary-container text-[18px]">psychology_alt</span>
+</div>
+<div class="mt-2 flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-on-surface">4 Structured</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Defense &amp; Damages</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1 mt-2 overflow-hidden">
+<div class="bg-primary-container h-full rounded-full w-full"></div>
+</div>
+</div>
+</div>
+<!-- Primary Document Canvas (Simulated Legal Docket Brief) -->
+<div class="w-full max-w-5xl mx-auto bg-surface-container-lowest rounded-xl shadow-md overflow-hidden transition-shadow duration-300 mb-space-2xl">
+<!-- Editorial Docket Sheet Head -->
+<div class="bg-surface-container-low p-space-xl md:p-space-2xl">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div>
+<div class="flex items-center gap-space-xs text-primary font-citation-code text-citation-code uppercase tracking-wider font-bold">
+<span class="material-symbols-outlined text-[16px]">balance</span>
+            LegalLens Evidentiary Brief Synthesis
+          </div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight mt-1">LEGAL PREPARATION BRIEF · CASE #LL-2024-089</h2>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-3 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold flex items-center gap-1.5 shadow-sm">
+<span class="w-2 h-2 rounded-full bg-error inline-block animate-ping"></span>
+            Privileged &amp; Confidential
+          </span>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-md mt-space-lg pt-space-md">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Prepared For</span>
+<span class="font-body-md text-body-md font-semibold text-on-surface">Sarah Jenkins (Principal Employee)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Senior Engineering Lead</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Docket Generation Date</span>
+<span class="font-body-md text-body-md font-semibold text-on-surface">30 August 2026</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">14:22:09 UTC · Digest: 0x9f1a…c83</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Verification Engine</span>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-[16px]">verified</span>
+<span class="font-body-md text-body-md font-semibold text-secondary">LegalLens Verified v2.4</span>
+</div>
+<span class="font-citation-code text-[11px] text-on-surface-variant">Multi-pass OCR OCR-A/B standard</span>
+</div>
+</div>
+</div>
+<!-- Paper Body Content -->
+<div class="p-space-xl md:p-space-2xl flex flex-col gap-space-2xl">
+<!-- Section 1: Situation Summary -->
+<section class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="px-2 py-0.5 rounded bg-surface-container font-citation-code text-citation-code font-bold text-primary">§ 01</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Situation Summary &amp; Procedural Posture</h3>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Intake Source: Certified Deposition Audio + Form 1A</span>
+</div>
+<div class="bg-surface p-space-lg rounded-xl text-on-surface leading-relaxed">
+<p class="font-body-lg text-body-lg text-on-surface">
+            Sarah Jenkins was retained by TechCorp Dynamics Ltd. on 20 January 2026 as Senior Engineering Lead. On 28 August 2026, following approximately 8 months of documented tenure, Jenkins received an unexpected verbal notification from the VP of People Operations demanding immediate resignation within 48 hours or facing unilateral termination for alleged "cultural non-alignment."
+          </p>
+<div class="mt-space-md p-space-md rounded-lg bg-surface-container-low flex flex-col sm:flex-row gap-space-md">
+<div class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">info</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+<strong class="text-on-surface">Core Gravamen:</strong> Material, unresolved contradictions between verbal termination demands, initial written representations set forth in the countersigned Offer Letter, and operative default remedies defined in the final Executed Employment Agreement.
+              </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Evidentiary Corpus -->
+<section class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="px-2 py-0.5 rounded bg-surface-container font-citation-code text-citation-code font-bold text-primary">§ 02</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Documents Reviewed &amp; Evidentiary Corpus</h3>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">3 Ingested · 1 Missing Reference</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Document Card 1 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between hover:bg-surface-container-low transition-colors">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-citation-code text-[11px] font-semibold">EXHIBIT A</span>
+<span class="material-symbols-outlined text-secondary text-[18px]">check_circle</span>
+</div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface">Countersigned Offer Letter</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Dated 12 Jan 2026. Explicitly details severance compensation &amp; original notice.</p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between font-citation-code text-citation-code text-on-surface-variant">
+<span>SHA256: 7f83…4b1a</span>
+<span class="font-bold text-primary">4 Pages</span>
+</div>
+</div>
+<!-- Document Card 2 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between hover:bg-surface-container-low transition-colors">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-citation-code text-[11px] font-semibold">EXHIBIT B</span>
+<span class="material-symbols-outlined text-secondary text-[18px]">check_circle</span>
+</div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface">Standard Employment Agreement</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Dated 18 Jan 2026. Primary operative contract superseding prior talks.</p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between font-citation-code text-citation-code text-on-surface-variant">
+<span>SHA256: 9e32…cc71</span>
+<span class="font-bold text-primary">22 Pages</span>
+</div>
+</div>
+<!-- Document Card 3 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between hover:bg-surface-container-low transition-colors">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-citation-code text-[11px] font-semibold">EXHIBIT C</span>
+<span class="material-symbols-outlined text-secondary text-[18px]">check_circle</span>
+</div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface">Formal Notice of Separation</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Transmitted via DocuSign on 30 Aug 2026. Invokes unilateral termination clauses.</p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between font-citation-code text-citation-code text-on-surface-variant">
+<span>SHA256: 3a08…12d4</span>
+<span class="font-bold text-primary">2 Pages</span>
+</div>
+</div>
+</div>
+<!-- Missing Corpus Callout -->
+<div class="p-space-md rounded-xl bg-tertiary-fixed text-on-tertiary-fixed flex items-start gap-space-md shadow-sm">
+<span class="material-symbols-outlined text-tertiary text-[22px] shrink-0 mt-0.5">folder_off</span>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-bold text-on-tertiary-fixed">Critical Reference Gap: HR Policy Handbook v4.2 Missing</span>
+<p class="font-body-sm text-body-sm text-on-tertiary-fixed-variant mt-0.5">
+              Exhibit B explicitly references Section 14.3 ("Disciplinary Escalation Process") and Section 8.1 ("Severance Calculation Matrix") housed in HR Policy Handbook v4.2. This document was never delivered to the employee and has not been provided in discovery.
+            </p>
+</div>
+</div>
+</section>
+<!-- Section 3: Timeline Reconstructed -->
+<section class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="px-2 py-0.5 rounded bg-surface-container font-citation-code text-citation-code font-bold text-primary">§ 03</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Chronological Timeline &amp; Verifiable Milestones</h3>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">4 Key Reconstructed Events</span>
+</div>
+<div class="overflow-hidden rounded-xl bg-surface-container-low shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left font-body-sm text-body-sm">
+<thead class="bg-surface-container text-on-surface-variant font-label-md text-label-md uppercase tracking-wider">
+<tr>
+<th class="py-space-sm px-space-md">Date &amp; Time</th>
+<th class="py-space-sm px-space-md">Document / Actor</th>
+<th class="py-space-sm px-space-md">Factual Milestone</th>
+<th class="py-space-sm px-space-md">Grounding Citation</th>
+<th class="py-space-sm px-space-md text-right">Integrity</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-highest">
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-space-md px-space-md font-citation-code text-citation-code font-bold text-on-surface whitespace-nowrap">12 Jan 2026</td>
+<td class="py-space-md px-space-md font-medium text-on-surface">TechCorp VP People</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Executed Offer Letter specifying 90-day mutual notice guarantee and $42,000 severance contingency.</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1 font-citation-code text-citation-code px-2 py-0.5 rounded bg-surface-container text-primary font-semibold">
+                      Ex. A · p. 1 · § 4
+                    </span>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<span class="inline-flex items-center gap-1 text-secondary font-semibold font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Verified
+                    </span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-space-md px-space-md font-citation-code text-citation-code font-bold text-on-surface whitespace-nowrap">20 Jan 2026</td>
+<td class="py-space-md px-space-md font-medium text-on-surface">Both Parties</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Commencement of employment; countersigned main Employment Agreement containing contradictory standard 30-day notice.</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1 font-citation-code text-citation-code px-2 py-0.5 rounded bg-surface-container text-primary font-semibold">
+                      Ex. B · p. 18 · § 19.2
+                    </span>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<span class="inline-flex items-center gap-1 text-secondary font-semibold font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Verified
+                    </span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-space-md px-space-md font-citation-code text-citation-code font-bold text-on-surface whitespace-nowrap">28 Aug 2026</td>
+<td class="py-space-md px-space-md font-medium text-on-surface">HR Director</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Verbal ultimatum conveyed during unscheduled 1:1 call. Offered 2 weeks pay in exchange for immediate voluntary resignation.</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1 font-citation-code text-citation-code px-2 py-0.5 rounded bg-surface-container text-tertiary font-semibold">
+                      Dep. Tr. · ¶ 14-22
+                    </span>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<span class="inline-flex items-center gap-1 text-tertiary font-semibold font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Sworn Statement
+                    </span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-space-md px-space-md font-citation-code text-citation-code font-bold text-on-surface whitespace-nowrap">30 Aug 2026</td>
+<td class="py-space-md px-space-md font-medium text-on-surface">General Counsel</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Unilateral separation notice transmitted via electronic signature portal citing immediate effect without cause.</td>
+<td class="py-space-md px-space-md whitespace-nowrap">
+<span class="inline-flex items-center gap-1 font-citation-code text-citation-code px-2 py-0.5 rounded bg-surface-container text-primary font-semibold">
+                      Ex. C · p. 1 · ¶ 2
+                    </span>
+</td>
+<td class="py-space-md px-space-md text-right whitespace-nowrap">
+<span class="inline-flex items-center gap-1 text-secondary font-semibold font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Verified
+                    </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- Section 4: Critical Conflicts & Discrepancies -->
+<section class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="px-2 py-0.5 rounded bg-surface-container font-citation-code text-citation-code font-bold text-error">§ 04</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Critical Evidentiary Conflicts &amp; Discrepancies</h3>
+</div>
+<span class="font-label-sm text-label-sm text-error font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">report_problem</span>
+            2 Primary Points of Vulnerability
+          </span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
+<!-- Conflict Box 1 -->
+<div class="p-space-lg rounded-xl bg-error-container text-on-error-container shadow-sm flex flex-col justify-between">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase font-bold tracking-wider text-error">Discrepancy 01 · Severe</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-lowest text-error font-citation-code text-citation-code font-bold">Δ 76 Days</span>
+</div>
+<h4 class="font-headline-md text-headline-md font-bold text-on-error-container mt-1">Notice Period Mandate</h4>
+<p class="font-body-sm text-body-sm leading-relaxed mt-1">
+                Material inconsistency between early inducement offer, standard boiler plate execution, and the employer's ultimate verbal demand:
+              </p>
+<div class="flex flex-col gap-2 mt-space-sm font-body-sm text-body-sm">
+<div class="p-space-sm bg-surface-container-lowest rounded-lg text-on-surface flex items-start justify-between gap-2 shadow-sm">
+<div>
+<span class="font-semibold block text-on-surface">Offer Letter (Exhibit A)</span>
+<span class="text-on-surface-variant">Guaranteed notice period</span>
+</div>
+<span class="font-citation-code text-citation-code font-bold text-secondary">90 Days</span>
+</div>
+<div class="p-space-sm bg-surface-container-lowest rounded-lg text-on-surface flex items-start justify-between gap-2 shadow-sm">
+<div>
+<span class="font-semibold block text-on-surface">Employment Contract (Exhibit B)</span>
+<span class="text-on-surface-variant">Default clause in § 19.2</span>
+</div>
+<span class="font-citation-code text-citation-code font-bold text-error">30 Days</span>
+</div>
+<div class="p-space-sm bg-surface-container-lowest rounded-lg text-on-surface flex items-start justify-between gap-2 shadow-sm">
+<div>
+<span class="font-semibold block text-on-surface">Verbal HR Demand (28 Aug)</span>
+<span class="text-on-surface-variant">Immediate ultimatum offered</span>
+</div>
+<span class="font-citation-code text-citation-code font-bold text-tertiary">2 Weeks (14d)</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between font-citation-code text-citation-code">
+<span class="text-on-error-container font-medium">Anchor: Ex. A p.1 vs Ex. B p.18</span>
+<span class="font-bold underline cursor-pointer">Inspect Trace →</span>
+</div>
+</div>
+<!-- Conflict Box 2 -->
+<div class="p-space-lg rounded-xl bg-surface-container-low shadow-sm flex flex-col justify-between">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase font-bold tracking-wider text-tertiary">Discrepancy 02 · Moderate</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-lowest text-tertiary font-citation-code text-citation-code font-bold">2x Variance</span>
+</div>
+<h4 class="font-headline-md text-headline-md font-bold text-on-surface mt-1">Non-Solicitation Restrictive Covenant</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mt-1">
+                The employer seeks to enforce a post-separation non-solicitation bar that directly contradicts the geographic &amp; temporal scope negotiated prior to onboarding:
+              </p>
+<div class="flex flex-col gap-2 mt-space-sm font-body-sm text-body-sm">
+<div class="p-space-sm bg-surface-container-lowest rounded-lg text-on-surface flex items-start justify-between gap-2 shadow-sm">
+<div>
+<span class="font-semibold block text-on-surface">Exhibit A Clause § 9</span>
+<span class="text-on-surface-variant">Agreed non-solicit restriction</span>
+</div>
+<span class="font-citation-code text-citation-code font-bold text-secondary">6 Months</span>
+</div>
+<div class="p-space-sm bg-surface-container-lowest rounded-lg text-on-surface flex items-start justify-between gap-2 shadow-sm">
+<div>
+<span class="font-semibold block text-on-surface">Exhibit B Clause § 21.4</span>
+<span class="text-on-surface-variant">Overbroad boilerplate term</span>
+</div>
+<span class="font-citation-code text-citation-code font-bold text-error">12 Months</span>
+</div>
+<div class="p-space-sm bg-surface-container-lowest rounded-lg text-on-surface flex items-start justify-between gap-2 shadow-sm">
+<div>
+<span class="font-semibold block text-on-surface">Jurisdictional Standard</span>
+<span class="text-on-surface-variant">State labor code limit</span>
+</div>
+<span class="font-citation-code text-citation-code font-bold text-primary">6 Mos Max</span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between font-citation-code text-citation-code">
+<span class="text-on-surface-variant font-medium">Anchor: Ex. A p.3 vs Ex. B p.21</span>
+<span class="font-bold text-primary underline cursor-pointer">Inspect Trace →</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 5: Document Gaps -->
+<section class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="px-2 py-0.5 rounded bg-surface-container font-citation-code text-citation-code font-bold text-primary">§ 05</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Identified Evidentiary Gaps &amp; Discovery Targets</h3>
+</div>
+<span class="font-label-sm text-label-sm text-outline font-semibold">Immediate Subpoena / Production Target</span>
+</div>
+<div class="p-space-lg rounded-xl bg-surface-container-low shadow-sm flex flex-col md:flex-row items-start gap-space-lg">
+<div class="p-3 bg-surface-container rounded-lg text-on-surface-variant shrink-0">
+<span class="material-symbols-outlined text-[32px]">rule_folder</span>
+</div>
+<div class="flex flex-col flex-1">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="font-headline-md text-headline-md font-bold text-on-surface">HR Policy Handbook (Version 4.2)</span>
+<span class="px-2 py-0.5 rounded bg-error-container text-error font-citation-code text-[11px] font-bold">CRITICAL DEFICIT</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1.5 leading-relaxed">
+              Employment Agreement Section 8.1 dictates that bonus recovery and final salary calculations must adhere to the formula published in <span class="font-citation-code text-citation-code font-bold text-on-surface">Handbook Appendix C</span>. Furthermore, Section 14.3 requires TechCorp management to issue at least two written performance warnings prior to any unilateral termination for cause. 
+            </p>
+<div class="mt-space-md flex flex-wrap gap-space-sm font-citation-code text-citation-code text-on-surface-variant">
+<span class="px-2 py-1 rounded bg-surface-container-lowest shadow-sm">Referenced: Ex. B § 8.1 (p. 9)</span>
+<span class="px-2 py-1 rounded bg-surface-container-lowest shadow-sm">Referenced: Ex. B § 14.3 (p. 15)</span>
+<span class="px-2 py-1 rounded bg-surface-container-lowest shadow-sm text-error font-bold">Unproduced by Employer</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 6: Recommended Questions for Legal Counsel -->
+<section class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="px-2 py-0.5 rounded bg-surface-container font-citation-code text-citation-code font-bold text-primary">§ 06</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Counsel Consultation Guide</h3>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">4 High-Leverage Strategic Prompts</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Question 1 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-citation-code text-citation-code font-bold text-primary">PROMPT 01</span>
+<span class="px-2 py-0.2 rounded bg-surface-container font-label-sm text-label-sm text-on-surface-variant">Contract Priority</span>
+</div>
+<h4 class="font-body-lg text-body-lg font-bold text-on-surface">Does the integration clause in Exhibit B successfully extinguish the 90-day notice guarantee in Exhibit A?</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2">
+<strong class="text-on-surface">Rationale:</strong> Offer letters signed within 10 days of an employment agreement can qualify as contemporaneous collateral representations under applicable state jurisdiction.
+              </p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center gap-1.5 text-primary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+              Examine Integration Clause (Ex. B p. 22 § 24)
+            </div>
+</div>
+<!-- Question 2 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-citation-code text-citation-code font-bold text-primary">PROMPT 02</span>
+<span class="px-2 py-0.2 rounded bg-surface-container font-label-sm text-label-sm text-on-surface-variant">Procedural Defense</span>
+</div>
+<h4 class="font-body-lg text-body-lg font-bold text-on-surface">Can the company claim 'for cause' discharge without showing compliance with the Handbook escalation procedure?</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2">
+<strong class="text-on-surface">Rationale:</strong> If § 14.3 incorporates the missing Handbook by reference, failure to deliver progressive discipline nullifies summary dismissal rights.
+              </p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center gap-1.5 text-primary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+              Examine Due Process Clause (Ex. B p. 15 § 14)
+            </div>
+</div>
+<!-- Question 3 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-citation-code text-citation-code font-bold text-primary">PROMPT 03</span>
+<span class="px-2 py-0.2 rounded bg-surface-container font-label-sm text-label-sm text-on-surface-variant">Restrictive Covenants</span>
+</div>
+<h4 class="font-body-lg text-body-lg font-bold text-on-surface">Is the 12-month post-employment non-solicitation clause severable or fully unenforceable under the blue-pencil rule?</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2">
+<strong class="text-on-surface">Rationale:</strong> Overreach in restrictive covenants can invalidate the covenant in its entirety, enabling immediate competitive employment.
+              </p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center gap-1.5 text-primary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+              Review Restrictive Covenants (Ex. B p. 21 § 21)
+            </div>
+</div>
+<!-- Question 4 -->
+<div class="p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-citation-code text-citation-code font-bold text-primary">PROMPT 04</span>
+<span class="px-2 py-0.2 rounded bg-surface-container font-label-sm text-label-sm text-on-surface-variant">Statutory Remedies</span>
+</div>
+<h4 class="font-body-lg text-body-lg font-bold text-on-surface">What statutory wage penalties apply if the final paycheck is delayed beyond 72 hours of termination?</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2">
+<strong class="text-on-surface">Rationale:</strong> State Labor Code § 203 enforces day-for-day salary penalties up to a 30-day statutory ceiling for willful withholding of earned severance.
+              </p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center gap-1.5 text-primary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+              Check Wage Penalty Precedents
+            </div>
+</div>
+</div>
+</section>
+<!-- Section 7: Evidentiary Sources Index (All 27 Clauses) -->
+<section class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="px-2 py-0.5 rounded bg-surface-container font-citation-code text-citation-code font-bold text-primary">§ 07</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Evidentiary Sources Master Index</h3>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">27 Verified Clause Extractions</span>
+</div>
+<div class="rounded-xl bg-surface-container-low shadow-sm overflow-hidden">
+<div class="p-space-md bg-surface-container flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant">Filters:</span>
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest text-primary font-label-sm text-label-sm font-semibold shadow-sm" type="button">All (27)</button>
+<button class="px-2.5 py-1 rounded hover:bg-surface-container-lowest text-on-surface-variant font-label-sm text-label-sm transition-colors" type="button">Exhibit A (6)</button>
+<button class="px-2.5 py-1 rounded hover:bg-surface-container-lowest text-on-surface-variant font-label-sm text-label-sm transition-colors" type="button">Exhibit B (17)</button>
+<button class="px-2.5 py-1 rounded hover:bg-surface-container-lowest text-on-surface-variant font-label-sm text-label-sm transition-colors" type="button">Exhibit C (4)</button>
+</div>
+<span class="font-citation-code text-citation-code text-on-surface-variant">Verified via OCR Coordinate Grid</span>
+</div>
+<div class="max-h-72 overflow-y-auto">
+<table class="w-full text-left font-body-sm text-body-sm">
+<thead class="bg-surface-container-low text-on-surface-variant font-citation-code text-[11px] uppercase tracking-wider sticky top-0">
+<tr>
+<th class="py-2 px-space-md">Ref #</th>
+<th class="py-2 px-space-md">Doc Source</th>
+<th class="py-2 px-space-md">Clause / Provision</th>
+<th class="py-2 px-space-md">Extracted Text Excerpt</th>
+<th class="py-2 px-space-md text-right">Verification Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-highest font-citation-code text-[12px]">
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-2 px-space-md font-bold text-primary">#01</td>
+<td class="py-2 px-space-md text-on-surface">Ex. A · p. 1</td>
+<td class="py-2 px-space-md font-bold text-on-surface">§ 4.1 Notice</td>
+<td class="py-2 px-space-md text-on-surface-variant font-body-sm text-body-sm truncate max-w-xs">"TechCorp agrees to provide ninety (90) days notice prior to involuntary termination..."</td>
+<td class="py-2 px-space-md text-right">
+<span class="inline-flex items-center gap-1 text-secondary font-semibold"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Found directly</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-2 px-space-md font-bold text-primary">#02</td>
+<td class="py-2 px-space-md text-on-surface">Ex. A · p. 2</td>
+<td class="py-2 px-space-md font-bold text-on-surface">§ 5.3 Bonus</td>
+<td class="py-2 px-space-md text-on-surface-variant font-body-sm text-body-sm truncate max-w-xs">"Annual performance multiplier minimum 15% guaranteed during first partial fiscal cycle..."</td>
+<td class="py-2 px-space-md text-right">
+<span class="inline-flex items-center gap-1 text-secondary font-semibold"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Found directly</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-2 px-space-md font-bold text-primary">#03</td>
+<td class="py-2 px-space-md text-on-surface">Ex. A · p. 3</td>
+<td class="py-2 px-space-md font-bold text-on-surface">§ 9.1 Non-Solicit</td>
+<td class="py-2 px-space-md text-on-surface-variant font-body-sm text-body-sm truncate max-w-xs">"Employee covenants not to solicit personnel for a period not exceeding six (6) months..."</td>
+<td class="py-2 px-space-md text-right">
+<span class="inline-flex items-center gap-1 text-secondary font-semibold"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Found directly</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors bg-tertiary-fixed/30">
+<td class="py-2 px-space-md font-bold text-tertiary">#04</td>
+<td class="py-2 px-space-md text-on-surface">Ex. B · p. 4</td>
+<td class="py-2 px-space-md font-bold text-on-surface">§ 3.2 Equity Vest</td>
+<td class="py-2 px-space-md text-on-surface-variant font-body-sm text-body-sm truncate max-w-xs">"Subject to accelerated single-trigger vesting upon change of corporate control or default..."</td>
+<td class="py-2 px-space-md text-right">
+<span class="inline-flex items-center gap-1 text-tertiary font-semibold"><span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Needs review</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-2 px-space-md font-bold text-primary">#05</td>
+<td class="py-2 px-space-md text-on-surface">Ex. B · p. 9</td>
+<td class="py-2 px-space-md font-bold text-on-surface">§ 8.1 Severance</td>
+<td class="py-2 px-space-md text-on-surface-variant font-body-sm text-body-sm truncate max-w-xs">"Severance shall be computed strictly according to HR Policy Handbook v4.2 Section 8.1..."</td>
+<td class="py-2 px-space-md text-right">
+<span class="inline-flex items-center gap-1 text-secondary font-semibold"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Found directly</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-2 px-space-md font-bold text-primary">#06</td>
+<td class="py-2 px-space-md text-on-surface">Ex. B · p. 15</td>
+<td class="py-2 px-space-md font-bold text-on-surface">§ 14.3 Escalation</td>
+<td class="py-2 px-space-md text-on-surface-variant font-body-sm text-body-sm truncate max-w-xs">"Progressive warnings required except in instances of gross willful statutory infraction..."</td>
+<td class="py-2 px-space-md text-right">
+<span class="inline-flex items-center gap-1 text-secondary font-semibold"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Found directly</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors bg-error-container/20">
+<td class="py-2 px-space-md font-bold text-error">#07</td>
+<td class="py-2 px-space-md text-on-surface">Ex. B · p. 18</td>
+<td class="py-2 px-space-md font-bold text-on-surface">§ 19.2 Term &amp; Notice</td>
+<td class="py-2 px-space-md text-on-surface-variant font-body-sm text-body-sm truncate max-w-xs">"Either party may terminate this agreement upon thirty (30) calendar days prior notice..."</td>
+<td class="py-2 px-space-md text-right">
+<span class="inline-flex items-center gap-1 text-error font-semibold"><span class="w-1.5 h-1.5 rounded-full bg-error"></span> Conflict match</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors bg-error-container/20">
+<td class="py-2 px-space-md font-bold text-error">#08</td>
+<td class="py-2 px-space-md text-on-surface">Ex. B · p. 21</td>
+<td class="py-2 px-space-md font-bold text-on-surface">§ 21.4 Non-Solicit</td>
+<td class="py-2 px-space-md text-on-surface-variant font-body-sm text-body-sm truncate max-w-xs">"For a period of twelve (12) continuous months post-termination, Employee shall not solicit..."</td>
+<td class="py-2 px-space-md text-right">
+<span class="inline-flex items-center gap-1 text-error font-semibold"><span class="w-1.5 h-1.5 rounded-full bg-error"></span> Conflict match</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-2 px-space-md font-bold text-primary">#09</td>
+<td class="py-2 px-space-md text-on-surface">Ex. B · p. 22</td>
+<td class="py-2 px-space-md font-bold text-on-surface">§ 24.1 Merger Clause</td>
+<td class="py-2 px-space-md text-on-surface-variant font-body-sm text-body-sm truncate max-w-xs">"This document constitutes the entire integrated understanding between the named parties..."</td>
+<td class="py-2 px-space-md text-right">
+<span class="inline-flex items-center gap-1 text-secondary font-semibold"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Found directly</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors">
+<td class="py-2 px-space-md font-bold text-primary">#10</td>
+<td class="py-2 px-space-md text-on-surface">Ex. C · p. 1</td>
+<td class="py-2 px-space-md font-bold text-on-surface">¶ 1 Discharge</td>
+<td class="py-2 px-space-md text-on-surface-variant font-body-sm text-body-sm truncate max-w-xs">"Effective August 30, 2026, your employment relationship with TechCorp Dynamics is terminated..."</td>
+<td class="py-2 px-space-md text-right">
+<span class="inline-flex items-center gap-1 text-secondary font-semibold"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Found directly</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-space-xs px-space-md bg-surface-container text-right font-citation-code text-[11px] text-on-surface-variant">
+            Viewing 10 of 27 cited entries · Full raw indices exported within PDF bundle
+          </div>
+</div>
+</section>
+<!-- Section 8: Mandatory Legal Disclaimer Box -->
+<section class="rounded-xl bg-surface-container p-space-lg text-on-surface shadow-sm">
+<div class="flex items-start gap-space-md">
+<span class="material-symbols-outlined text-outline text-[24px] shrink-0 mt-0.5">policy</span>
+<div class="flex flex-col gap-1">
+<span class="font-headline-md text-headline-md font-semibold text-on-surface">Mandatory Legal Notice &amp; Statutory Caveat</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+<strong class="text-on-surface">Disclaimer:</strong> This brief is compiled by LegalLens for informational and preparation purposes only. It does not constitute formal legal advice, attorney-client privileged counsel, or replace the discretionary review of a licensed legal professional. Users should deliver this synthesized report alongside all original evidentiary attachments directly to qualified counsel for jurisdiction-specific litigation strategy.
+            </p>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- Bottom Floating Execution Bar -->
+<div class="sticky bottom-4 z-30 w-full max-w-5xl mx-auto">
+<div class="bg-inverse-surface text-inverse-on-surface p-space-md px-space-xl rounded-xl shadow-xl flex flex-col sm:flex-row items-center justify-between gap-space-md backdrop-blur">
+<div class="flex items-center gap-space-md">
+<div class="w-3 h-3 rounded-full bg-secondary-container animate-pulse"></div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-inverse-on-surface">Brief compiled with 100% citation grounding</span>
+<span class="font-label-sm text-label-sm text-surface-variant">27 clause anchors validated · Ready for external export</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm w-full sm:w-auto justify-end">
+<button class="h-10 px-space-xl rounded-lg bg-primary text-on-primary hover:bg-primary-container transition-all font-label-md text-label-md flex items-center gap-2 shadow-md" type="button">
+<span>Export Preparation Brief</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

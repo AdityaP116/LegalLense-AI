@@ -1,53 +1,42 @@
-import type { HTMLAttributes } from 'react';
-import { cn } from '../../utils/cn';
+/* eslint-disable react-refresh/only-export-components */
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
 
-export type BadgeVariant = 'verified' | 'review' | 'conflict' | 'missing';
+import { cn } from "@/lib/utils"
 
-interface BadgeProps extends HTMLAttributes<HTMLDivElement> {
-  variant: BadgeVariant;
-}
-
-export function Badge({ variant, className, children, ...props }: BadgeProps) {
-  const styles = {
-    verified: {
-      bg: 'bg-[#ECFDF5]',
-      text: 'text-[#059669]',
-      border: 'border-[#A7F3D0]',
-      dot: 'bg-[#059669]'
+const badgeVariants = cva(
+  "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-citation-code text-[11px] font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  {
+    variants: {
+      variant: {
+        default:
+          "bg-primary/20 text-primary border border-primary/30 shadow-[0_0_10px_rgba(var(--primary),0.2)]",
+        secondary:
+          "bg-surface-container text-on-surface border border-border",
+        outline:
+          "text-on-surface border border-input",
+        success:
+          "bg-secondary/20 text-secondary border border-secondary/30 shadow-[0_0_10px_rgba(var(--secondary),0.2)]",
+        warning:
+          "bg-tertiary/20 text-tertiary border border-tertiary/30 shadow-[0_0_10px_rgba(var(--tertiary),0.2)]",
+        destructive:
+          "bg-error/20 text-error border border-error/30 shadow-[0_0_10px_rgba(var(--error),0.2)]",
+      },
     },
-    review: {
-      bg: 'bg-[#FFFBEB]',
-      text: 'text-[#D97706]',
-      border: 'border-[#FDE68A]',
-      dot: 'bg-[#D97706]'
+    defaultVariants: {
+      variant: "default",
     },
-    conflict: {
-      bg: 'bg-[#FEF2F2]',
-      text: 'text-[#DC2626]',
-      border: 'border-[#FECACA]',
-      dot: 'bg-[#DC2626]'
-    },
-    missing: {
-      bg: 'bg-[#F1F5F9]',
-      text: 'text-[#64748B]',
-      border: 'border-[#CBD5E1]',
-      dot: 'bg-[#64748B]'
-    }
-  }[variant];
+  }
+)
 
+export interface BadgeProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof badgeVariants> {}
+
+function Badge({ className, variant, ...props }: BadgeProps) {
   return (
-    <div
-      className={cn(
-        "inline-flex items-center h-6 rounded-full px-[10px] border",
-        styles.bg,
-        styles.text,
-        styles.border,
-        className
-      )}
-      {...props}
-    >
-      <span className={cn("w-[6px] h-[6px] rounded-full mr-[6px]", styles.dot)} />
-      <span className="text-xs font-medium leading-none">{children}</span>
-    </div>
-  );
+    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+  )
 }
+
+export { Badge, badgeVariants }

@@ -1,8 +1,98 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
+  :root {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+
+    /* Sleek Dark Slate / Deep Blue surfaces */
+    --surface: 240 10% 3.9%;
+    --surface-container-lowest: 240 10% 5%;
+    --surface-container-low: 240 11% 7%;
+    --surface-container: 240 11% 9%;
+    --surface-container-high: 240 11% 11%;
+    --surface-container-highest: 240 11% 14%;
+    
+    --on-surface: 0 0% 98%;
+    --on-surface-variant: 240 5% 64.9%;
+    --outline: 240 4% 46%;
+    --outline-variant: 240 5% 26%;
+
+    /* Primary: Vibrant Electric Indigo / Blue */
+    --primary: 226 100% 64%;
+    --on-primary: 0 0% 100%;
+    --primary-container: 226 100% 25%;
+    --on-primary-container: 226 100% 90%;
+    --primary-fixed: 226 100% 85%;
+    --primary-fixed-dim: 226 100% 75%;
+    
+    /* Secondary: Neon Cyan / Emerald */
+    --secondary: 160 84% 39%;
+    --on-secondary: 0 0% 100%;
+    --secondary-container: 160 84% 15%;
+    --on-secondary-container: 160 84% 85%;
+    --secondary-fixed: 160 84% 75%;
+    
+    /* Tertiary: Vibrant Amber / Orange */
+    --tertiary: 35 100% 50%;
+    --on-tertiary: 0 0% 10%;
+    --tertiary-container: 35 100% 20%;
+    --on-tertiary-container: 35 100% 85%;
+    --tertiary-fixed: 35 100% 75%;
+
+    /* Error / Destructive */
+    --error: 348 83% 47%;
+    --on-error: 0 0% 100%;
+    --error-container: 348 83% 20%;
+    --on-error-container: 348 83% 90%;
+    
+    /* Radii */
+    --radius: 0.5rem;
+    
+    /* Borders & Inputs */
+    --border: 240 11% 14%;
+    --input: 240 11% 14%;
+    --ring: 226 100% 64%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
   html, body {
-    @apply h-full bg-background text-on-background font-sans antialiased;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    overscroll-behavior: none;
+    -webkit-font-smoothing: antialiased;
+  }
+  main > :first-child {
+    margin-top: 0 !important;
+  }
+  main > :last-child {
+    margin-bottom: 0 !important;
+  }
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Glassmorphism Utilities */
+@layer utilities {
+  .glass {
+    @apply bg-surface-container/60 backdrop-blur-md border border-white/5;
+  }
+  .glass-panel {
+    @apply bg-surface-container-lowest/80 backdrop-blur-lg border border-white/10 shadow-lg;
+  }
+  .text-glow {
+    text-shadow: 0 0 10px hsla(var(--primary), 0.5);
   }
 }

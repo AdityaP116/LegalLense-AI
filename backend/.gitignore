@@ -1,0 +1,16 @@
+.env
+*.pyc
+__pycache__/
+*.pyo
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+venv/
+.venv/
+env/
+# Firebase service account JSON — NEVER commit this
+*serviceAccount*.json
+firebase-adminsdk*.json
