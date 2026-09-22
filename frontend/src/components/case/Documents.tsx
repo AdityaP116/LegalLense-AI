@@ -26,7 +26,7 @@ export function Documents({ caseId }: { caseId: string }) {
   const [dragOver, setDragOver] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const loadDocuments = async () => {
+  const loadDocuments = useCallback(async () => {
     try {
       const docs = await documentService.list(caseId)
       setDocuments(docs)
@@ -35,7 +35,7 @@ export function Documents({ caseId }: { caseId: string }) {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [caseId])
 
   useEffect(() => {
     loadDocuments()
@@ -47,7 +47,7 @@ export function Documents({ caseId }: { caseId: string }) {
       if (!anyProcessing) clearInterval(timer)
     }, 4000)
     return () => clearInterval(timer)
-  }, [caseId])
+  }, [caseId, loadDocuments])
 
   const validateFile = (file: File): string | null => {
     const ext = '.' + file.name.split('.').pop()?.toLowerCase()

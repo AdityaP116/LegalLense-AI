@@ -122,7 +122,7 @@ export function Overview({ caseId, caseData }: { caseId: string; caseData: any }
       }
     }
     init()
-  }, [caseId])
+  }, [caseId, pollJob, loadAnalysisData])
 
   // Polling when running
   useEffect(() => {
@@ -157,7 +157,7 @@ export function Overview({ caseId, caseData }: { caseId: string; caseData: any }
       setAnalysisStatus('running')
       setStepIndex(0)
       await analysisService.triggerAnalysis(caseId)
-    } catch (err: any) {
+    } catch (_err: any) {
       setAnalysisStatus('failed')
     }
   }
@@ -176,7 +176,7 @@ export function Overview({ caseId, caseData }: { caseId: string; caseData: any }
         status: result.status,
         sources: result.sources ?? [],
       }])
-    } catch (err: any) {
+    } catch (_err: any) {
       setChatError('AI analysis is temporarily unavailable. Please try again.')
     } finally {
       setChatLoading(false)

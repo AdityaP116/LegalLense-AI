@@ -59,7 +59,7 @@ export function Questions({ caseId }: { caseId: string }) {
         saved: false,
       }
       setQaList(prev => [...prev, newItem])
-    } catch (err: any) {
+    } catch (_err: any) {
       setError('AI analysis is temporarily unavailable. Please try again.')
     } finally {
       setIsAsking(false)
@@ -72,7 +72,7 @@ export function Questions({ caseId }: { caseId: string }) {
     try {
       const generated = await questionService.generate(caseId)
       setSavedQuestions(generated)
-    } catch (err: any) {
+    } catch (_err: any) {
       setError('Failed to generate questions. Please ensure analysis is complete first.')
     } finally {
       setIsGenerating(false)
