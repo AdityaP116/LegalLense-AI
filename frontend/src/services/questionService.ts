@@ -5,8 +5,8 @@ export const questionService = {
   list: (caseId: string) => 
     api.get<Question[]>(`/api/cases/${caseId}/questions`),
 
-  create: (caseId: string, question: string) => 
-    api.post<Question>(`/api/cases/${caseId}/questions`, { question }),
+  create: (caseId: string, data: { question: string; category?: string; rationale?: string }) => 
+    api.post<Question>(`/api/cases/${caseId}/questions`, data),
 
   update: (caseId: string, questionId: string, data: Partial<Question>) => 
     api.patch<Question>(`/api/questions/${questionId}?case_id=${caseId}`, data),

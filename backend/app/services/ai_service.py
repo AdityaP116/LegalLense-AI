@@ -254,13 +254,33 @@ def _mock_answer_question(question: str, chunks: List[Dict]) -> Dict:
 def _call_gemini(prompt: str, response_schema: Optional[str] = None) -> str:
     """Call Google Gemini and return the text response."""
     try:
-        import google.generativeai as genai
+        from google import genai
+        from google.genai import types as genai_types
 
         settings = get_settings()
-        genai.configure(api_key=settings.gemini_api_key)
-        model = genai.GenerativeModel("gemini-1.5-flash")
-        response = model.generate_content(prompt)
+        client = genai.Client(api_key=settings.gemini_api_key)
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt,
+            config=genai_types.GenerateContentConfig(
+                temperature=0.1,  # Low temperature for factual extraction
+                max_output_tokens=8192,
+            ),
+        )
         return response.text
+    except ImportError:
+        # Fallback to legacy SDK if google-genai not installed
+        try:
+            import google.generativeai as genai_legacy
+
+            settings = get_settings()
+            genai_legacy.configure(api_key=settings.gemini_api_key)
+            model = genai_legacy.GenerativeModel("gemini-1.5-flash")
+            response = model.generate_content(prompt)
+            return response.text
+        except Exception as e:
+            logger.error("Gemini API call failed (legacy SDK): %s", str(e))
+            raise
     except Exception as e:
         logger.error("Gemini API call failed: %s", str(e))
         raise

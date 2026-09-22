@@ -1,12 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Dashboard } from '@/pages/Dashboard'
-import { SituationIntake } from '@/pages/SituationIntake'
-import { DocumentWorkspace } from '@/pages/DocumentWorkspace'
-import { Analysis } from '@/pages/Analysis'
-import { Timeline } from '@/pages/Timeline'
-import { Questions } from '@/pages/Questions'
-import { Briefs } from '@/pages/Briefs'
+import { CreateCase } from '@/pages/CreateCase'
+import { CaseWorkspace } from '@/pages/CaseWorkspace'
 import { Login } from '@/pages/Login'
 import { AuthProvider, useAuth } from '@/contexts/AuthContext'
 import { Shield } from 'lucide-react'
@@ -42,16 +38,8 @@ function AppContent() {
             <Route path="settings" element={<div className="p-space-xl">Settings View Placeholder</div>} />
 
             {/* Case Workspace Routes */}
-            <Route path="case/:caseId">
-              {/* If they navigate to /case/:caseId, default to intake or documents */}
-              <Route index element={<Navigate to="intake" replace />} />
-              <Route path="intake" element={<SituationIntake />} />
-              <Route path="documents" element={<DocumentWorkspace />} />
-              <Route path="analysis" element={<Analysis />} />
-              <Route path="timeline" element={<Timeline />} />
-              <Route path="questions" element={<Questions />} />
-              <Route path="briefs" element={<Briefs />} />
-            </Route>
+            <Route path="cases/new" element={<CreateCase />} />
+            <Route path="case/:caseId" element={<CaseWorkspace />} />
           </Route>
         </Route>
       </Routes>

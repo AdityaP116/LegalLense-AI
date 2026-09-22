@@ -47,12 +47,7 @@ export function Sidebar() {
             <div className="px-space-md pt-space-sm">
               <span className="px-space-xs font-label-sm text-label-sm text-outline uppercase tracking-wider block mb-space-xs">Workspace</span>
               <nav className="flex flex-col gap-1">
-                <NavItem to={`/case/${caseId}/intake`} icon="info" label="Situation Intake" />
-                <NavItem to={`/case/${caseId}/documents`} icon="description" label="Documents" />
-                <NavItem to={`/case/${caseId}/analysis`} icon="rule" label="Analysis" />
-                <NavItem to={`/case/${caseId}/timeline`} icon="schedule" label="Timeline" />
-                <NavItem to={`/case/${caseId}/questions`} icon="help_outline" label="Questions & Chat" />
-                <NavItem to={`/case/${caseId}/briefs`} icon="history_edu" label="Brief" />
+                <NavItem to={`/case/${caseId}`} icon="folder_special" label="Case Workspace" exact />
               </nav>
             </div>
           </>

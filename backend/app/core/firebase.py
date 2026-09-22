@@ -20,7 +20,19 @@ def _init_firebase() -> firebase_admin.App:
     if settings.firebase_project_id:
         os.environ["GOOGLE_CLOUD_PROJECT"] = settings.firebase_project_id
 
-    if (
+    # Check for serviceAccountKey.json in the backend root directory
+    backend_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+    service_account_path = os.path.join(backend_dir, "serviceAccountKey.json")
+
+    bucket_name = settings.firebase_storage_bucket or (f"{settings.firebase_project_id}.firebasestorage.app" if settings.firebase_project_id else None)
+
+    if os.path.exists(service_account_path):
+        cred = credentials.Certificate(service_account_path)
+        options = {}
+        if bucket_name:
+            options["storageBucket"] = bucket_name
+        app = firebase_admin.initialize_app(cred, options if options else None)
+    elif (
         settings.firebase_project_id
         and settings.firebase_client_email
         and settings.firebase_private_key
@@ -34,21 +46,18 @@ def _init_firebase() -> firebase_admin.App:
                 "token_uri": "https://oauth2.googleapis.com/token",
             }
         )
-        app = firebase_admin.initialize_app(
-            cred,
-            {"storageBucket": settings.firebase_storage_bucket},
-        )
+        options = {}
+        if bucket_name:
+            options["storageBucket"] = bucket_name
+        app = firebase_admin.initialize_app(cred, options if options else None)
     else:
-        # No credentials — initialize without explicit credentials.
-        # In this case Firestore/Storage calls will fail gracefully.
-        # The server will still start and /health will respond.
+        # No explicit credentials found
         try:
             if settings.firebase_project_id:
                 app = firebase_admin.initialize_app(options={"projectId": settings.firebase_project_id})
             else:
                 app = firebase_admin.initialize_app()
         except ValueError:
-            # Already initialized (e.g., during testing)
             app = firebase_admin.get_app()
 
     return app

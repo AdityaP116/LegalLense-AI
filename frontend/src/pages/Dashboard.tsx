@@ -11,7 +11,7 @@ export function Dashboard() {
   const [cases, setCases] = useState<Case[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [isCreating, setIsCreating] = useState(false)
+
 
   const fetchCases = useCallback(async () => {
     try {
@@ -29,20 +29,8 @@ export function Dashboard() {
     fetchCases()
   }, [fetchCases])
 
-  const handleCreateCase = async () => {
-    try {
-      setIsCreating(true)
-      const newCase = await caseService.create({
-        title: "New Case",
-        category: "General",
-        situation: "",
-        goals: []
-      })
-      navigate(`/case/${newCase.id}/intake`)
-    } catch (err: any) {
-      setError(err.message || "Failed to create case")
-      setIsCreating(false)
-    }
+  const handleCreateCase = () => {
+    navigate('/cases/new')
   }
 
   return (
@@ -71,9 +59,9 @@ export function Dashboard() {
               <span className="material-symbols-outlined text-[18px]">logout</span>
               Sign Out
             </Button>
-            <Button className="gap-2 px-space-xl h-10" onClick={handleCreateCase} disabled={isCreating}>
+            <Button className="gap-2 px-space-xl h-10" onClick={handleCreateCase}>
               <span className="material-symbols-outlined text-[18px]">add</span>
-              {isCreating ? "Starting..." : "Start New Case"}
+              Start New Case
             </Button>
           </div>
         </div>

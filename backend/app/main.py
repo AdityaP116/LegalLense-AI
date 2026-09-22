@@ -87,9 +87,18 @@ def health():
 @app.exception_handler(Exception)
 async def generic_exception_handler(request: Request, exc: Exception):
     logger.error("Unhandled exception on %s: %s", request.url, exc)
+    
+    # Ensure CORS headers are present even on 500 errors
+    origin = request.headers.get("origin")
+    headers = {}
+    if origin:
+        headers["Access-Control-Allow-Origin"] = origin
+        headers["Access-Control-Allow-Credentials"] = "true"
+        
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content={"detail": "An internal server error occurred."},
+        content={"detail": f"An internal server error occurred: {str(exc)}"},
+        headers=headers
     )
 
 

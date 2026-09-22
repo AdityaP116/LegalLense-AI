@@ -1,5 +1,21 @@
-"""Tests for AI service mock mode."""
+"""Tests for AI service mock mode.
+
+These tests always use mock mode regardless of the .env AI_SERVICE_MODE setting.
+The conftest.py fixture patches get_settings() to return mock mode.
+"""
+import pytest
+from unittest.mock import patch, MagicMock
 from app.services import ai_service
+
+
+@pytest.fixture(autouse=True)
+def force_mock_mode():
+    """Force AI_SERVICE_MODE=mock for all tests in this module."""
+    mock_settings = MagicMock()
+    mock_settings.ai_service_mode = "mock"
+    with patch("app.services.ai_service.get_settings", return_value=mock_settings):
+        # Also clear any module-level cache
+        yield
 
 
 def test_extract_clauses_mock():
