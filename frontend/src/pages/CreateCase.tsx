@@ -64,9 +64,17 @@ export function CreateCase() {
   }
 
   const handleCreateCase = async () => {
+    if (!title.trim()) {
+      setError("Please provide a case title.");
+      return;
+    }
+    if (narrative.trim().length < 10) {
+      setError("Please describe your situation in more detail (at least 10 characters).");
+      return;
+    }
     if (files.length === 0) {
-      setError("Please upload at least one document.")
-      return
+      setError("Please upload at least one document.");
+      return;
     }
     
     try {
