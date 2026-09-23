@@ -171,6 +171,11 @@ def run_analysis(db: Client, bucket, case_id: str, job_id: str) -> None:
 
             # Chunk
             chunks = extraction_service.chunk_pages(pages)
+            
+            # Generate embeddings for each chunk
+            for chunk in chunks:
+                chunk["embedding"] = ai_service.get_embedding(chunk["text"])
+                
             all_chunks.extend(chunks)
 
             # Store chunks in Firestore

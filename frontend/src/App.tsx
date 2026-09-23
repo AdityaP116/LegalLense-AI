@@ -4,6 +4,8 @@ import { Dashboard } from '@/pages/Dashboard'
 import { CreateCase } from '@/pages/CreateCase'
 import { CaseWorkspace } from '@/pages/CaseWorkspace'
 import { Login } from '@/pages/Login'
+import { Settings } from '@/pages/Settings'
+import { DocumentIntelligenceDashboard } from '@/pages/DocumentIntelligenceDashboard'
 import { AuthProvider, useAuth } from '@/contexts/AuthContext'
 import { Shield } from 'lucide-react'
 
@@ -35,11 +37,12 @@ function AppContent() {
           <Route path="/" element={<AppLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="cases" element={<div className="p-space-xl">My Cases View Placeholder</div>} />
-            <Route path="settings" element={<div className="p-space-xl">Settings View Placeholder</div>} />
+            <Route path="settings" element={<Settings />} />
 
             {/* Case Workspace Routes */}
             <Route path="cases/new" element={<CreateCase />} />
             <Route path="case/:caseId" element={<CaseWorkspace />} />
+            <Route path="case/:caseId/document-intelligence" element={<DocumentIntelligenceDashboard />} />
           </Route>
         </Route>
       </Routes>

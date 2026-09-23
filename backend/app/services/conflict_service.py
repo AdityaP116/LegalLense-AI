@@ -1,14 +1,14 @@
 """
-Conflict detection service.
+Conflict detection service — LLM-based generalized conflict detection.
 
-Extracts structured facts from evidence records, groups by topic,
-compares values across documents, and stores conflict records.
+Extracts all evidence from Firestore, groups by topic, and passes the
+structured facts to the Gemini AI model to identify contradictions across
+any topic — not just notice periods.
 """
 
 import logging
-import re
 from datetime import datetime, timezone
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from google.cloud.firestore import Client
 
@@ -18,45 +18,82 @@ CASES = "cases"
 EVIDENCE_SUB = "evidence"
 CONFLICTS_SUB = "conflicts"
 
-NOTICE_PERIOD_PATTERNS = [
-    r"(\d+)\s*(?:day|days)",
-    r"(\d+)\s*(?:week|weeks)",
-    r"(\d+)\s*(?:month|months)",
-]
-
-NOTICE_KEYWORDS = [
-    "notice",
-    "notice period",
-    "termination notice",
-    "resignation",
-]
-
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def _extract_notice_days(text: str) -> Optional[int]:
-    text_lower = text.lower()
-    for pattern in NOTICE_PERIOD_PATTERNS:
-        match = re.search(pattern, text_lower)
-        if match:
-            value = int(match.group(1))
-            if "week" in text_lower:
-                return value * 7
-            if "month" in text_lower:
-                return value * 30
-            return value
-    return None
+def _build_facts_by_topic(evidence_list: List[Dict]) -> Dict[str, List[Dict]]:
+    """
+    Group evidence records by their topic field, building a dict of:
+      { "topic_name": [{ value, doc, page, section, documentId }, ...], ... }
+
+    Only include topics that have evidence from more than one document,
+    as single-document topics cannot have cross-document conflicts.
+    """
+    # First pass: group by topic
+    raw: Dict[str, List[Dict]] = {}
+    for ev in evidence_list:
+        topic = (ev.get("topic") or ev.get("section") or "general").strip().lower()
+        if not topic or topic == "date":
+            # Skip date evidence — dates don't conflict in the same way
+            continue
+        raw.setdefault(topic, []).append({
+            "value": ev.get("text", ""),
+            "documentId": ev.get("documentId", ""),
+            "documentName": ev.get("documentName", ""),
+            "page": ev.get("page"),
+            "section": ev.get("section", ""),
+        })
+
+    # Second pass: only keep topics with evidence from multiple documents
+    multi_doc: Dict[str, List[Dict]] = {}
+    for topic, facts in raw.items():
+        doc_ids = {f["documentId"] for f in facts}
+        if len(doc_ids) > 1:
+            multi_doc[topic] = facts
+
+    return multi_doc
+
+
+def _normalize_conflict(conflict: Dict, case_id: str) -> Dict:
+    """
+    Normalize LLM-returned conflict to the Firestore schema.
+    LLM returns evidenceA/evidenceB; schema expects evidence: [...]
+    """
+    evidence = conflict.get("evidence", [])
+
+    # Handle LLM returning evidenceA / evidenceB format
+    if not evidence:
+        ev_a = conflict.get("evidenceA")
+        ev_b = conflict.get("evidenceB")
+        if ev_a:
+            evidence.append(ev_a)
+        if ev_b:
+            evidence.append(ev_b)
+
+    return {
+        "caseId": case_id,
+        "topic": conflict.get("topic", "Unknown"),
+        "description": conflict.get("description", ""),
+        "status": conflict.get("status", "needs_review"),
+        "evidence": evidence,
+        "createdAt": _now_iso(),
+    }
 
 
 def detect_conflicts_from_evidence(
     db: Client, case_id: str, documents: List[Dict]
 ) -> List[Dict]:
     """
-    Pull evidence from Firestore, group by topic, compare across docs.
-    Returns list of conflict dicts ready to be stored.
+    Pull evidence from Firestore, group by topic, then use the LLM to
+    detect contradictions across all topics.
+
+    Returns a list of conflict dicts ready to be stored in Firestore.
     """
+    from app.services import ai_service
+
+    # Load all evidence for the case
     evidence_docs = list(
         db.collection(CASES)
         .document(case_id)
@@ -65,77 +102,33 @@ def detect_conflicts_from_evidence(
     )
     evidence_list = [{"id": d.id, **d.to_dict()} for d in evidence_docs]
 
-    conflicts = []
+    if not evidence_list:
+        logger.info("No evidence found for case %s — skipping conflict detection", case_id)
+        return []
 
-    # ── Notice period conflict ──────────────────────────────────────────────
-    notice_evidence = [
-        e
-        for e in evidence_list
-        if any(kw in e.get("text", "").lower() for kw in NOTICE_KEYWORDS)
-        or e.get("topic", "").lower() in ("termination", "notice_period")
-    ]
+    # Build structured facts grouped by topic
+    facts_by_topic = _build_facts_by_topic(evidence_list)
 
-    # Group by document
-    notice_by_doc: Dict[str, List[Dict]] = {}
-    for ev in notice_evidence:
-        doc_id = ev.get("documentId", "")
-        notice_by_doc.setdefault(doc_id, []).append(ev)
-
-    # Compare notice values across docs
-    notice_values = []
-    for doc_id, evs in notice_by_doc.items():
-        for ev in evs:
-            days = _extract_notice_days(ev.get("text", ""))
-            if days is not None:
-                doc_name = ev.get("documentName", doc_id)
-                notice_values.append(
-                    {
-                        "days": days,
-                        "documentId": doc_id,
-                        "documentName": doc_name,
-                        "page": ev.get("page"),
-                        "section": ev.get("section", ""),
-                        "text": ev.get("text", ""),
-                    }
-                )
-
-    # Find distinct notice values
-    unique_values = {v["days"] for v in notice_values}
-    if len(unique_values) > 1 and len(notice_values) >= 2:
-        ev_a = notice_values[0]
-        ev_b = next(
-            (v for v in notice_values if v["days"] != ev_a["days"]), None
+    if not facts_by_topic:
+        logger.info(
+            "No multi-document evidence topics found for case %s — no conflicts possible",
+            case_id,
         )
-        if ev_b:
-            conflicts.append(
-                {
-                    "topic": "Notice Period",
-                    "description": (
-                        f"The uploaded documents contain different notice period values. "
-                        f"One document states {ev_a['days']} days while another states "
-                        f"{ev_b['days']} days. "
-                        "Information differs across the uploaded documents — "
-                        "this section may need review with a qualified legal professional."
-                    ),
-                    "status": "needs_review",
-                    "evidence": [
-                        {
-                            "documentId": ev_a["documentId"],
-                            "documentName": ev_a["documentName"],
-                            "page": ev_a["page"],
-                            "section": ev_a["section"],
-                            "text": ev_a["text"],
-                        },
-                        {
-                            "documentId": ev_b["documentId"],
-                            "documentName": ev_b["documentName"],
-                            "page": ev_b["page"],
-                            "section": ev_b["section"],
-                            "text": ev_b["text"],
-                        },
-                    ],
-                    "createdAt": _now_iso(),
-                }
-            )
+        return []
 
-    return conflicts
+    logger.info(
+        "Detecting conflicts for case %s across %d topics: %s",
+        case_id,
+        len(facts_by_topic),
+        list(facts_by_topic.keys()),
+    )
+
+    # Call the LLM-based conflict detector
+    raw_conflicts = ai_service.detect_conflicts(facts_by_topic)
+
+    # Normalize and return
+    normalized = [_normalize_conflict(c, case_id) for c in raw_conflicts]
+    logger.info(
+        "Found %d conflict(s) for case %s", len(normalized), case_id
+    )
+    return normalized

@@ -2,8 +2,52 @@ import { useState, useEffect, useCallback } from "react"
 import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { caseService } from "@/services/caseService"
+import { analysisService } from "@/services/analysisService"
 import { useAuth } from "@/contexts/AuthContext"
-import type { Case } from "@/types"
+import type { Case, AnalysisResult } from "@/types"
+
+// ── Health score helpers ──────────────────────────────────────────────────────
+
+function computeHealthScore(result: AnalysisResult): number {
+  const verified = result.clausesExtracted ?? 0
+  const issues = (result.conflictsFound ?? 0) + (result.missingReferences ?? 0)
+  const total = verified + issues
+  if (total === 0) return 100
+  return Math.round((verified / total) * 100)
+}
+
+function healthColor(score: number): { ring: string; text: string; bg: string; label: string } {
+  if (score >= 80) return { ring: "stroke-secondary", text: "text-secondary", bg: "bg-secondary/10", label: "Healthy" }
+  if (score >= 50) return { ring: "stroke-amber-400", text: "text-amber-400", bg: "bg-amber-400/10", label: "Needs Review" }
+  return { ring: "stroke-error", text: "text-error", bg: "bg-error/10", label: "Action Required" }
+}
+
+// SVG circular progress ring
+function HealthRing({ score }: { score: number }) {
+  const r = 36
+  const circumference = 2 * Math.PI * r
+  const offset = circumference - (score / 100) * circumference
+  const { ring } = healthColor(score)
+
+  return (
+    <svg width="96" height="96" viewBox="0 0 96 96" className="-rotate-90">
+      {/* Track */}
+      <circle cx="48" cy="48" r={r} fill="none" stroke="currentColor" strokeWidth="7" className="text-surface-container-high" />
+      {/* Progress */}
+      <circle
+        cx="48"
+        cy="48"
+        r={r}
+        fill="none"
+        strokeWidth="7"
+        strokeLinecap="round"
+        strokeDasharray={circumference}
+        strokeDashoffset={offset}
+        className={`${ring} transition-all duration-1000 ease-out`}
+      />
+    </svg>
+  )
+}
 
 export function Dashboard() {
   const navigate = useNavigate()
@@ -11,13 +55,26 @@ export function Dashboard() {
   const [cases, setCases] = useState<Case[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
+  const [healthResult, setHealthResult] = useState<AnalysisResult | null>(null)
+  const [healthLoading, setHealthLoading] = useState(false)
 
   const fetchCases = useCallback(async () => {
     try {
       setLoading(true)
       const data = await caseService.list()
       setCases(data)
+      // Fetch health score from the most recent case
+      if (data.length > 0) {
+        setHealthLoading(true)
+        try {
+          const result = await analysisService.getResult(data[0].id)
+          setHealthResult(result)
+        } catch {
+          // No analysis yet for most recent case — leave null
+        } finally {
+          setHealthLoading(false)
+        }
+      }
     } catch (err: any) {
       setError(err.message || "Failed to load cases")
     } finally {
@@ -32,6 +89,10 @@ export function Dashboard() {
   const handleCreateCase = () => {
     navigate('/cases/new')
   }
+
+  // Computed health metrics
+  const healthScore = healthResult ? computeHealthScore(healthResult) : null
+  const healthMeta = healthScore !== null ? healthColor(healthScore) : null
 
   return (
     <div className="flex flex-col w-full">
@@ -155,18 +216,63 @@ export function Dashboard() {
 
         {/* Right Column */}
         <div className="lg:col-span-4 flex flex-col gap-space-xl">
+          {/* Evidentiary Health Score */}
           <div className="glass-panel border-secondary/20 rounded-xl p-space-lg shadow-lg flex flex-col gap-space-md relative overflow-hidden group hover:border-secondary/50 transition-colors">
             <div className="absolute right-0 top-0 w-32 h-32 bg-secondary/10 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 pointer-events-none group-hover:bg-secondary/20 transition-colors duration-500"></div>
             <div className="flex items-center justify-between relative z-10">
               <span className="font-citation-code text-citation-code uppercase text-outline font-semibold">Evidentiary Health</span>
               <span className="material-symbols-outlined text-secondary text-[18px] group-hover:scale-110 transition-transform">verified_user</span>
             </div>
-            <div className="relative z-10">
-              <div className="flex items-baseline gap-2">
-                <span className="font-headline-xl text-headline-xl text-secondary font-bold text-glow">100%</span>
-                <span className="font-label-sm text-label-sm text-secondary font-semibold">Citations</span>
-              </div>
-              <span className="font-label-sm text-label-sm text-on-surface-variant">Zero unsupported premises detected.</span>
+
+            <div className="relative z-10 flex flex-col items-center gap-4">
+              {healthLoading ? (
+                /* Skeleton while loading */
+                <div className="w-24 h-24 rounded-full bg-surface-container-low animate-pulse" />
+              ) : healthScore !== null && healthMeta ? (
+                /* Dynamic ring */
+                <div className="relative">
+                  <HealthRing score={healthScore} />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className={`font-bold text-xl leading-none ${healthMeta.text}`}>{healthScore}%</span>
+                    <span className="text-xs text-on-surface-variant mt-0.5">Score</span>
+                  </div>
+                </div>
+              ) : (
+                /* No analysis yet */
+                <div className="flex flex-col items-center gap-2 py-2">
+                  <span className="material-symbols-outlined text-on-surface-variant text-[32px]">analytics</span>
+                  <span className="text-xs text-on-surface-variant text-center">Run analysis to<br/>calculate score</span>
+                </div>
+              )}
+
+              {healthScore !== null && healthMeta && (
+                <div className="w-full flex flex-col gap-2">
+                  <div className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full ${healthMeta.bg} w-fit mx-auto`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${healthMeta.text.replace('text-', 'bg-')}`} />
+                    <span className={`text-xs font-semibold ${healthMeta.text}`}>{healthMeta.label}</span>
+                  </div>
+
+                  {healthResult && (
+                    <div className="grid grid-cols-3 gap-2 mt-1">
+                      <div className="flex flex-col items-center p-2 rounded-lg bg-surface-container-low">
+                        <span className="font-bold text-on-surface text-sm">{healthResult.clausesExtracted}</span>
+                        <span className="text-xs text-on-surface-variant text-center leading-tight mt-0.5">Verified</span>
+                      </div>
+                      <div className="flex flex-col items-center p-2 rounded-lg bg-error/10">
+                        <span className="font-bold text-error text-sm">{healthResult.conflictsFound}</span>
+                        <span className="text-xs text-on-surface-variant text-center leading-tight mt-0.5">Conflicts</span>
+                      </div>
+                      <div className="flex flex-col items-center p-2 rounded-lg bg-amber-500/10">
+                        <span className="font-bold text-amber-400 text-sm">{healthResult.missingReferences}</span>
+                        <span className="text-xs text-on-surface-variant text-center leading-tight mt-0.5">Missing</span>
+                      </div>
+                    </div>
+                  )}
+                  <span className="font-label-sm text-label-sm text-on-surface-variant text-center text-xs">
+                    Based on most recent case analysis
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         </div>

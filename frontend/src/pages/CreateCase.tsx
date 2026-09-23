@@ -17,6 +17,8 @@ export function CreateCase() {
   
   const [isCreating, setIsCreating] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [consentData, setConsentData] = useState(false)
+  const [consentAI, setConsentAI] = useState(false)
 
   const categories = [
     { id: "employment", icon: "badge", title: "Employment" },
@@ -74,6 +76,10 @@ export function CreateCase() {
     }
     if (files.length === 0) {
       setError("Please upload at least one document.");
+      return;
+    }
+    if (!consentData || !consentAI) {
+      setError("Please read and accept both consent statements before proceeding.");
       return;
     }
     
@@ -237,11 +243,59 @@ export function CreateCase() {
         </div>
       </section>
 
+      {/* Privacy & AI Consent */}
+      <section className="glass-panel border border-amber-500/30 bg-amber-500/5 rounded-xl shadow-lg p-space-lg flex flex-col gap-space-md">
+        <div className="flex items-start gap-3">
+          <span className="material-symbols-outlined text-amber-400 text-[22px] shrink-0 mt-0.5">policy</span>
+          <div>
+            <h2 className="font-headline-md text-headline-md text-on-surface mb-1">Data Privacy &amp; AI Consent</h2>
+            <p className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Before uploading legal documents, please read and confirm the following. LegalLens AI is a document
+              preparation tool — it does <strong className="text-on-surface">not</strong> provide legal advice.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-3 mt-1">
+          <label className="flex items-start gap-3 cursor-pointer group p-3 rounded-lg hover:bg-amber-500/10 transition-colors">
+            <input
+              type="checkbox"
+              id="consent-data"
+              checked={consentData}
+              onChange={e => setConsentData(e.target.checked)}
+              className="w-4 h-4 mt-0.5 rounded accent-amber-500 focus:ring-amber-500 shrink-0"
+            />
+            <span className="text-sm text-on-surface leading-relaxed">
+              <strong>Data Privacy Consent — </strong>
+              I consent to my uploaded documents being securely stored and processed by LegalLens AI solely for the
+              purpose of analysis within this case. I understand my data will not be shared with third parties.
+            </span>
+          </label>
+
+          <label className="flex items-start gap-3 cursor-pointer group p-3 rounded-lg hover:bg-amber-500/10 transition-colors">
+            <input
+              type="checkbox"
+              id="consent-ai"
+              checked={consentAI}
+              onChange={e => setConsentAI(e.target.checked)}
+              className="w-4 h-4 mt-0.5 rounded accent-amber-500 focus:ring-amber-500 shrink-0"
+            />
+            <span className="text-sm text-on-surface leading-relaxed">
+              <strong>AI Processing Consent — </strong>
+              I understand that AI is used to analyse my documents and that all results are for preparation
+              purposes only. LegalLens AI does <strong>not</strong> provide legal advice and I will seek qualified
+              legal counsel before making any decisions.
+            </span>
+          </label>
+        </div>
+      </section>
+
       <div className="flex justify-end pt-4 pb-8">
         <Button 
           onClick={handleCreateCase} 
-          disabled={isCreating} 
+          disabled={isCreating || !consentData || !consentAI} 
           className="h-12 px-8 gap-2 w-full sm:w-auto"
+          title={(!consentData || !consentAI) ? 'Please accept both consent statements above' : undefined}
         >
           {isCreating ? (
             <>

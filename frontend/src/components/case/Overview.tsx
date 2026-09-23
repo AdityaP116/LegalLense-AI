@@ -186,24 +186,89 @@ export function Overview({ caseId, caseData }: { caseId: string; caseData: any }
   // ── Render states ─────────────────────────────────────────────────────────
 
   if (analysisStatus === 'running') {
+    const progress = Math.max(job?.progress ?? 0, Math.min(95, Math.round(((stepIndex + 1) / STEPS.length) * 100)))
     return (
-      <div className="flex flex-col items-center justify-center gap-6 py-20">
-        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center animate-pulse">
-          <span className="material-symbols-outlined text-primary text-[32px] animate-spin" style={{ animationDuration: '2s' }}>psychology</span>
-        </div>
-        <div className="text-center flex flex-col gap-2">
-          <h3 className="font-headline-md text-on-surface font-semibold">AI Analysis in Progress</h3>
-          <p className="text-on-surface-variant text-sm">{STEPS[stepIndex]}</p>
-          {job && (
-            <div className="mt-2 w-64 mx-auto bg-surface-container-low rounded-full h-1.5">
+      <div className="flex flex-col items-center justify-center py-16 px-4">
+        <div className="max-w-xl w-full glass-panel p-8 rounded-2xl border border-primary/30 shadow-xl bg-gradient-to-b from-primary/5 via-surface to-surface flex flex-col items-center text-center gap-6 relative overflow-hidden">
+          {/* Ambient Glow */}
+          <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-64 h-64 bg-primary/20 rounded-full blur-3xl pointer-events-none" />
+
+          {/* Glowing AI Spinner Icon */}
+          <div className="relative">
+            <div className="w-20 h-20 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center animate-pulse shadow-[0_0_25px_rgba(var(--primary-rgb,59,130,246),0.3)]">
+              <span className="material-symbols-outlined text-primary text-[40px] animate-spin" style={{ animationDuration: '3s' }}>
+                auto_awesome
+              </span>
+            </div>
+            <div className="absolute -bottom-1 -right-1 bg-secondary text-on-secondary w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-bold shadow-md">
+              AI
+            </div>
+          </div>
+
+          {/* Heading */}
+          <div className="space-y-1 z-10">
+            <h3 className="font-headline-md text-on-surface font-bold text-xl tracking-tight">
+              LegalLens AI Analysis Active
+            </h3>
+            <p className="text-on-surface-variant text-sm font-medium">
+              Evaluating contract clauses, cross-document conflicts & evidentiary health
+            </p>
+          </div>
+
+          {/* Main Progress Bar */}
+          <div className="w-full space-y-2 z-10">
+            <div className="flex justify-between items-center text-xs font-semibold text-on-surface-variant px-1">
+              <span className="text-primary flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-primary animate-ping inline-block" />
+                {STEPS[stepIndex]}
+              </span>
+              <span className="font-mono text-primary text-sm">{progress}%</span>
+            </div>
+            <div className="w-full bg-surface-container-high rounded-full h-2.5 overflow-hidden p-0.5 border border-border">
               <div
-                className="h-1.5 rounded-full bg-primary transition-all duration-500"
-                style={{ width: `${job.progress ?? 20}%` }}
+                className="h-full rounded-full bg-gradient-to-r from-primary via-tertiary to-secondary transition-all duration-700 shadow-sm"
+                style={{ width: `${progress}%` }}
               />
             </div>
-          )}
+          </div>
+
+          {/* Step Timeline Breakdown */}
+          <div className="w-full bg-surface-container-lowest/80 backdrop-blur-sm rounded-xl border border-border/80 p-4 text-left space-y-2.5 z-10">
+            <span className="text-[11px] uppercase tracking-wider font-bold text-on-surface-variant/80 block mb-2">
+              Analysis Pipeline Stages
+            </span>
+            {STEPS.map((stepText, idx) => {
+              const isDone = idx < stepIndex
+              const isCurrent = idx === stepIndex
+              return (
+                <div key={idx} className="flex items-center gap-3 text-xs">
+                  {isDone ? (
+                    <span className="material-symbols-outlined text-secondary text-[16px]">check_circle</span>
+                  ) : isCurrent ? (
+                    <span className="material-symbols-outlined text-primary text-[16px] animate-spin">sync</span>
+                  ) : (
+                    <span className="material-symbols-outlined text-outline text-[16px]">radio_button_unchecked</span>
+                  )}
+                  <span
+                    className={
+                      isDone
+                        ? 'text-on-surface-variant line-through opacity-75'
+                        : isCurrent
+                        ? 'text-on-surface font-semibold'
+                        : 'text-outline'
+                    }
+                  >
+                    {stepText}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+
+          <p className="text-[11px] text-on-surface-variant/70 italic z-10">
+            Deep context analysis powered by Gemini 1.5 & RAG vector search.
+          </p>
         </div>
-        <p className="text-xs text-on-surface-variant">Processing your uploaded documents with AI — this may take a moment.</p>
       </div>
     )
   }

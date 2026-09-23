@@ -124,6 +124,31 @@ def delete_document(
     return {"message": "Document deleted."}
 
 
+@router.get("/documents/{document_id}/download-url", response_model=dict)
+def get_download_url(
+    document_id: str,
+    user: dict = Depends(get_current_user),
+    db: Client = Depends(get_firestore),
+    bucket=Depends(get_storage_bucket),
+):
+    """Return a short-lived signed URL for direct browser download / viewing."""
+    import datetime as dt
+
+    doc = document_service.get_document(db, document_id, user["uid"])
+    storage_path = doc.get("storagePath", "")
+    if not storage_path:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Storage path not found for document.")
+
+    blob = bucket.blob(storage_path)
+    signed_url = blob.generate_signed_url(
+        expiration=dt.timedelta(minutes=60),
+        method="GET",
+        version="v4",
+    )
+    return {"data": {"url": signed_url, "filename": doc.get("filename", "")}}
+
+
 @router.post("/documents/{document_id}/process", response_model=dict)
 def reprocess_document(
     document_id: str,

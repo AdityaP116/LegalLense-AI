@@ -23,6 +23,7 @@ export function Sidebar() {
         <div className="px-space-md pt-space-sm pb-space-xs border-b border-border/50">
           <nav className="flex flex-col gap-1">
             <NavItem to="/" icon="grid_view" label="Dashboard" exact />
+            <NavItem to="/settings" icon="settings" label="Settings" exact />
           </nav>
         </div>
 

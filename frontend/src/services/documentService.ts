@@ -13,6 +13,9 @@ export const documentService = {
     
   get: (documentId: string) => 
     api.get<LegalDocument>(`/api/documents/${documentId}`),
+
+  getDownloadUrl: (documentId: string) =>
+    api.get<{ url: string; filename: string }>(`/api/documents/${documentId}/download-url`),
     
   delete: (documentId: string) => 
     api.delete<void>(`/api/documents/${documentId}`),
@@ -20,3 +23,4 @@ export const documentService = {
   reprocess: (documentId: string) => 
     api.post<void>(`/api/documents/${documentId}/process`),
 }
+

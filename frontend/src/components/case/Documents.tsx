@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { documentService } from '@/services/documentService'
 import { analysisService } from '@/services/analysisService'
+import { DocumentViewer } from './DocumentViewer'
 import type { LegalDocument } from '@/types'
 
 const ALLOWED_TYPES = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
@@ -25,6 +26,7 @@ export function Documents({ caseId }: { caseId: string }) {
   const [error, setError] = useState<string | null>(null)
   const [dragOver, setDragOver] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [viewerDoc, setViewerDoc] = useState<LegalDocument | null>(null)
 
   const loadDocuments = useCallback(async () => {
     try {
@@ -251,18 +253,37 @@ export function Documents({ caseId }: { caseId: string }) {
                       <p className="text-xs text-error mt-1">{doc.processingError}</p>
                     )}
                   </div>
-                  <button
-                    onClick={() => handleDelete(doc)}
-                    className="text-on-surface-variant hover:text-error transition-colors opacity-0 group-hover:opacity-100 p-1"
-                    title="Delete document"
-                  >
-                    <span className="material-symbols-outlined text-[18px]">delete</span>
-                  </button>
+                  <div className="flex items-center gap-1">
+                    {doc.processingStatus === 'completed' && (
+                      <button
+                        onClick={() => setViewerDoc(doc)}
+                        className="text-primary text-xs font-medium hover:underline opacity-0 group-hover:opacity-100 transition-opacity px-2 py-1 rounded hover:bg-primary/10"
+                        title="View document"
+                      >
+                        View
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleDelete(doc)}
+                      className="text-on-surface-variant hover:text-error transition-colors opacity-0 group-hover:opacity-100 p-1"
+                      title="Delete document"
+                    >
+                      <span className="material-symbols-outlined text-[18px]">delete</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             )
           })}
         </div>
+      )}
+
+      {/* Document Viewer slide-over */}
+      {viewerDoc && (
+        <DocumentViewer
+          document={viewerDoc}
+          onClose={() => setViewerDoc(null)}
+        />
       )}
     </div>
   )

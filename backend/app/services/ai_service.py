@@ -286,6 +286,41 @@ def _call_gemini(prompt: str, response_schema: Optional[str] = None) -> str:
         raise
 
 
+def get_embedding(text: str) -> List[float]:
+    """Get the vector embedding for a piece of text using Gemini."""
+    if not _is_live():
+        # Return a mock deterministic vector for testing
+        return [0.1] * 768
+
+    try:
+        from google import genai
+        settings = get_settings()
+        client = genai.Client(api_key=settings.gemini_api_key)
+        response = client.models.embed_content(
+            model="text-embedding-004",
+            contents=text,
+        )
+        return response.embeddings[0].values
+    except ImportError:
+        # Fallback to legacy SDK if google-genai not installed
+        try:
+            import google.generativeai as genai_legacy
+
+            settings = get_settings()
+            genai_legacy.configure(api_key=settings.gemini_api_key)
+            result = genai_legacy.embed_content(
+                model="models/text-embedding-004",
+                content=text,
+            )
+            return result['embedding']
+        except Exception as e:
+            logger.error("Gemini embedding call failed (legacy SDK): %s", str(e))
+            return [0.0] * 768
+    except Exception as e:
+        logger.error("Gemini embedding call failed: %s", str(e))
+        return [0.0] * 768
+
+
 def _parse_json_response(raw: str) -> Any:
     """Extract JSON from a Gemini response that may include markdown fences."""
     # Try direct parse
