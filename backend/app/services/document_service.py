@@ -24,12 +24,19 @@ def _now_iso() -> str:
 
 
 def _assert_document_ownership(db: Client, document_id: str, uid: str) -> Dict:
-    """Find document across all cases and verify ownership."""
-    # Search by querying cases owned by user
-    cases_query = (
+    """Find document across all cases and verify ownership concurrently."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    user_cases = list(
         db.collection(CASES_COLLECTION).where("userId", "==", uid).stream()
     )
-    for case_doc in cases_query:
+    if not user_cases:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Document {document_id} not found.",
+        )
+
+    def check_case(case_doc):
         doc_ref = (
             db.collection(CASES_COLLECTION)
             .document(case_doc.id)
@@ -39,10 +46,19 @@ def _assert_document_ownership(db: Client, document_id: str, uid: str) -> Dict:
         doc = doc_ref.get()
         if doc.exists:
             return {"id": doc.id, "caseId": case_doc.id, **doc.to_dict()}
+        return None
+
+    with ThreadPoolExecutor(max_workers=min(10, len(user_cases))) as executor:
+        results = executor.map(check_case, user_cases)
+        for res in results:
+            if res:
+                return res
+
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=f"Document {document_id} not found.",
     )
+
 
 
 async def upload_document(

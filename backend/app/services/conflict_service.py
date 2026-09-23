@@ -19,8 +19,28 @@ EVIDENCE_SUB = "evidence"
 CONFLICTS_SUB = "conflicts"
 
 
+import re
+from typing import Dict, List, Optional
+
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def _extract_notice_days(text: str) -> Optional[int]:
+    """Helper function to extract notice period in days from text."""
+    if not text:
+        return None
+    match_days = re.search(r"(\d+)\s*days?", text, re.IGNORECASE)
+    if match_days:
+        return int(match_days.group(1))
+    match_weeks = re.search(r"(\d+)\s*weeks?", text, re.IGNORECASE)
+    if match_weeks:
+        return int(match_weeks.group(1)) * 7
+    match_months = re.search(r"(\d+)\s*months?", text, re.IGNORECASE)
+    if match_months:
+        return int(match_months.group(1)) * 30
+    return None
+
 
 
 def _build_facts_by_topic(evidence_list: List[Dict]) -> Dict[str, List[Dict]]:

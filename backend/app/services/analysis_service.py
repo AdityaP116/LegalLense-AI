@@ -172,9 +172,11 @@ def run_analysis(db: Client, bucket, case_id: str, job_id: str) -> None:
             # Chunk
             chunks = extraction_service.chunk_pages(pages)
             
-            # Generate embeddings for each chunk
-            for chunk in chunks:
-                chunk["embedding"] = ai_service.get_embedding(chunk["text"])
+            # Generate embeddings for each chunk in parallel
+            chunk_texts = [c["text"] for c in chunks]
+            embeddings = ai_service.get_embeddings_batch(chunk_texts, max_workers=10)
+            for chunk, emb in zip(chunks, embeddings):
+                chunk["embedding"] = emb
                 
             all_chunks.extend(chunks)
 
@@ -191,24 +193,36 @@ def run_analysis(db: Client, bucket, case_id: str, job_id: str) -> None:
             chunk_batch.commit()
 
         _update_job(
-            db, case_id, job_id, progress=30, currentStep="Extracting clauses"
+            db, case_id, job_id, progress=30, currentStep="Extracting clauses and references"
         )
 
-        # ── Step 2: AI Extraction ──────────────────────────────────────────
+        # ── Step 2 & 3: Parallel AI Extractions ───────────────────────────
         all_evidence = []
+        all_references = []
 
-        for doc_meta in documents:
-            doc_id = doc_meta["id"]
-            filename = doc_meta.get("filename", "")
-            doc_pages = [p for p in all_pages if p["documentId"] == doc_id]
-            full_text = "\n".join(p["text"] for p in doc_pages)
+        from concurrent.futures import ThreadPoolExecutor
 
-            # Clauses
-            clauses = ai_service.extract_clauses(full_text, filename)
+        def process_doc_extractions(doc_meta):
+            d_id = doc_meta["id"]
+            d_filename = doc_meta.get("filename", "")
+            d_pages = [p for p in all_pages if p["documentId"] == d_id]
+            d_full_text = "\n".join(p["text"] for p in d_pages)
+
+            # Execute extractions concurrently for this document
+            with ThreadPoolExecutor(max_workers=3) as doc_executor:
+                clauses_future = doc_executor.submit(ai_service.extract_clauses, d_full_text, d_filename)
+                dates_future = doc_executor.submit(ai_service.extract_dates, d_full_text, d_filename)
+                refs_future = doc_executor.submit(ai_service.detect_references, d_full_text, d_filename)
+
+                clauses = clauses_future.result()
+                dates = dates_future.result()
+                references = refs_future.result()
+
+            doc_evidence = []
             for clause in clauses:
-                ev = {
-                    "documentId": doc_id,
-                    "documentName": filename,
+                doc_evidence.append({
+                    "documentId": d_id,
+                    "documentName": d_filename,
                     "page": clause.get("page"),
                     "section": clause.get("section", ""),
                     "text": clause.get("text", ""),
@@ -216,15 +230,12 @@ def run_analysis(db: Client, bucket, case_id: str, job_id: str) -> None:
                     "status": "FOUND_DIRECTLY",
                     "topic": clause.get("clauseType", ""),
                     "createdAt": _now_iso(),
-                }
-                all_evidence.append(ev)
+                })
 
-            # Dates
-            dates = ai_service.extract_dates(full_text, filename)
             for date_item in dates:
-                ev = {
-                    "documentId": doc_id,
-                    "documentName": filename,
+                doc_evidence.append({
+                    "documentId": d_id,
+                    "documentName": d_filename,
                     "page": date_item.get("page"),
                     "section": "",
                     "text": date_item.get("description", ""),
@@ -233,54 +244,66 @@ def run_analysis(db: Client, bucket, case_id: str, job_id: str) -> None:
                     "topic": "date",
                     "extractedDate": date_item.get("date"),
                     "createdAt": _now_iso(),
-                }
-                all_evidence.append(ev)
+                })
 
-        # Store evidence
-        evidence_batch = db.batch()
-        for ev in all_evidence:
-            ref = (
-                db.collection(CASES)
-                .document(case_id)
-                .collection(EVIDENCE_SUB)
-                .document()
-            )
-            evidence_batch.set(ref, ev)
-        evidence_batch.commit()
-
-        _update_job(
-            db,
-            case_id,
-            job_id,
-            progress=50,
-            currentStep="Detecting references",
-        )
-
-        # ── Step 3: Reference Detection ────────────────────────────────────
-        for doc_meta in documents:
-            doc_id = doc_meta["id"]
-            filename = doc_meta.get("filename", "")
-            doc_pages = [p for p in all_pages if p["documentId"] == doc_id]
-            full_text = "\n".join(p["text"] for p in doc_pages)
-
-            references = ai_service.detect_references(full_text, filename)
+            doc_refs = []
             for ref_item in references:
                 ref_name = ref_item.get("referencedItem", "")
-                # Check if referenced document is in workspace
                 found = _check_reference_in_workspace(documents, ref_name)
-                ref_doc = {
+                doc_refs.append({
                     "referencedItem": ref_name,
-                    "referencingDocId": doc_id,
-                    "referencingDocName": filename,
+                    "referencingDocId": d_id,
+                    "referencingDocName": d_filename,
                     "sourcePage": ref_item.get("page"),
                     "sourceSection": ref_item.get("section", ""),
                     "sourceText": ref_item.get("sourceText", ""),
                     "status": "FOUND" if found else "MISSING_INFORMATION",
                     "createdAt": _now_iso(),
-                }
-                db.collection(CASES).document(case_id).collection(
-                    REFERENCES_SUB
-                ).add(ref_doc)
+                })
+
+            return doc_evidence, doc_refs
+
+        # Run extraction across all documents concurrently
+        with ThreadPoolExecutor(max_workers=min(8, len(documents))) as main_executor:
+            extraction_results = list(main_executor.map(process_doc_extractions, documents))
+
+        for doc_ev, doc_rf in extraction_results:
+            all_evidence.extend(doc_ev)
+            all_references.extend(doc_rf)
+
+        # Store evidence batch
+        if all_evidence:
+            evidence_batch = db.batch()
+            for ev in all_evidence:
+                ref = (
+                    db.collection(CASES)
+                    .document(case_id)
+                    .collection(EVIDENCE_SUB)
+                    .document()
+                )
+                evidence_batch.set(ref, ev)
+            evidence_batch.commit()
+
+        _update_job(
+            db,
+            case_id,
+            job_id,
+            progress=55,
+            currentStep="Saving reference detection",
+        )
+
+        # Store references batch
+        if all_references:
+            ref_batch = db.batch()
+            for ref_doc in all_references:
+                ref = (
+                    db.collection(CASES)
+                    .document(case_id)
+                    .collection(REFERENCES_SUB)
+                    .document()
+                )
+                ref_batch.set(ref, ref_doc)
+            ref_batch.commit()
 
         _update_job(
             db, case_id, job_id, progress=65, currentStep="Detecting conflicts"

@@ -64,9 +64,13 @@ def retrieve(
     3. For legacy chunks without embeddings, fall back to keyword overlap.
     4. Return top-N results sorted by similarity score descending.
     """
-    # Load all chunks for the case
+    # Load all chunks for the case with field projection
     docs = (
-        db.collection(CASES).document(case_id).collection(CHUNKS_SUB).stream()
+        db.collection(CASES)
+        .document(case_id)
+        .collection(CHUNKS_SUB)
+        .select(["text", "embedding", "documentName", "page", "section"])
+        .stream()
     )
     chunks = [{"id": d.id, **d.to_dict()} for d in docs]
 

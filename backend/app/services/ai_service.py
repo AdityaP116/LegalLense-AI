@@ -250,37 +250,47 @@ def _mock_answer_question(question: str, chunks: List[Dict]) -> Dict:
 # Live Gemini implementation
 # ─────────────────────────────────────────────────────────────────────────────
 
+from concurrent.futures import ThreadPoolExecutor
+
+_GEMINI_CLIENT = None
+
+def _get_gemini_client():
+    global _GEMINI_CLIENT
+    if _GEMINI_CLIENT is not None:
+        return _GEMINI_CLIENT
+    try:
+        from google import genai
+        settings = get_settings()
+        _GEMINI_CLIENT = genai.Client(api_key=settings.gemini_api_key)
+        return _GEMINI_CLIENT
+    except Exception as e:
+        logger.error("Failed to initialize Gemini Client: %s", e)
+        return None
+
 
 def _call_gemini(prompt: str, response_schema: Optional[str] = None) -> str:
     """Call Google Gemini and return the text response."""
     try:
-        from google import genai
-        from google.genai import types as genai_types
-
-        settings = get_settings()
-        client = genai.Client(api_key=settings.gemini_api_key)
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=prompt,
-            config=genai_types.GenerateContentConfig(
-                temperature=0.1,  # Low temperature for factual extraction
-                max_output_tokens=8192,
-            ),
-        )
-        return response.text
-    except ImportError:
-        # Fallback to legacy SDK if google-genai not installed
-        try:
-            import google.generativeai as genai_legacy
-
-            settings = get_settings()
-            genai_legacy.configure(api_key=settings.gemini_api_key)
-            model = genai_legacy.GenerativeModel("gemini-1.5-flash")
-            response = model.generate_content(prompt)
+        client = _get_gemini_client()
+        if client is not None:
+            from google.genai import types as genai_types
+            response = client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=prompt,
+                config=genai_types.GenerateContentConfig(
+                    temperature=0.1,  # Low temperature for factual extraction
+                    max_output_tokens=8192,
+                ),
+            )
             return response.text
-        except Exception as e:
-            logger.error("Gemini API call failed (legacy SDK): %s", str(e))
-            raise
+        
+        # Fallback to legacy SDK if new SDK client initialization returned None
+        import google.generativeai as genai_legacy
+        settings = get_settings()
+        genai_legacy.configure(api_key=settings.gemini_api_key)
+        model = genai_legacy.GenerativeModel("gemini-1.5-flash")
+        response = model.generate_content(prompt)
+        return response.text
     except Exception as e:
         logger.error("Gemini API call failed: %s", str(e))
         raise
@@ -289,36 +299,41 @@ def _call_gemini(prompt: str, response_schema: Optional[str] = None) -> str:
 def get_embedding(text: str) -> List[float]:
     """Get the vector embedding for a piece of text using Gemini."""
     if not _is_live():
-        # Return a mock deterministic vector for testing
         return [0.1] * 768
 
     try:
-        from google import genai
-        settings = get_settings()
-        client = genai.Client(api_key=settings.gemini_api_key)
-        response = client.models.embed_content(
-            model="text-embedding-004",
-            contents=text,
-        )
-        return response.embeddings[0].values
-    except ImportError:
-        # Fallback to legacy SDK if google-genai not installed
-        try:
-            import google.generativeai as genai_legacy
-
-            settings = get_settings()
-            genai_legacy.configure(api_key=settings.gemini_api_key)
-            result = genai_legacy.embed_content(
-                model="models/text-embedding-004",
-                content=text,
+        client = _get_gemini_client()
+        if client is not None:
+            response = client.models.embed_content(
+                model="text-embedding-004",
+                contents=text,
             )
-            return result['embedding']
-        except Exception as e:
-            logger.error("Gemini embedding call failed (legacy SDK): %s", str(e))
-            return [0.0] * 768
+            return response.embeddings[0].values
+
+        import google.generativeai as genai_legacy
+        settings = get_settings()
+        genai_legacy.configure(api_key=settings.gemini_api_key)
+        result = genai_legacy.embed_content(
+            model="models/text-embedding-004",
+            content=text,
+        )
+        return result['embedding']
     except Exception as e:
         logger.error("Gemini embedding call failed: %s", str(e))
         return [0.0] * 768
+
+
+def get_embeddings_batch(texts: List[str], max_workers: int = 10) -> List[List[float]]:
+    """Get vector embeddings for a list of texts in parallel using ThreadPoolExecutor."""
+    if not texts:
+        return []
+    if not _is_live():
+        return [[0.1] * 768 for _ in texts]
+
+    with ThreadPoolExecutor(max_workers=min(max_workers, len(texts))) as executor:
+        results = list(executor.map(get_embedding, texts))
+    return results
+
 
 
 def _parse_json_response(raw: str) -> Any:

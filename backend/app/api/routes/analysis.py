@@ -44,36 +44,64 @@ def get_analysis_result(
     user: dict = Depends(get_current_user),
     db: Client = Depends(get_firestore),
 ):
+    from concurrent.futures import ThreadPoolExecutor
+
     get_case(db, case_id, user["uid"])
     job = analysis_service.get_latest_job(db, case_id)
 
-    # Count sub-collections
-    def count(sub):
-        return len(
-            list(
+    def count_sub(sub: str) -> int:
+        try:
+            res = db.collection("cases").document(case_id).collection(sub).count().get()
+            return res[0][0].value
+        except Exception:
+            return len(
+                list(
+                    db.collection("cases")
+                    .document(case_id)
+                    .collection(sub)
+                    .stream()
+                )
+            )
+
+    def count_missing_refs() -> int:
+        try:
+            res = (
                 db.collection("cases")
                 .document(case_id)
-                .collection(sub)
-                .stream()
-            )
-        )
-
-    result = {
-        "caseId": case_id,
-        "documentsAnalyzed": count("documents"),
-        "clausesExtracted": count("evidence"),
-        "conflictsFound": count("conflicts"),
-        "missingReferences": len(
-            [
-                d
-                for d in db.collection("cases")
-                .document(case_id)
                 .collection("references")
-                .stream()
-                if d.to_dict().get("status") == "MISSING_INFORMATION"
-            ]
-        ),
-        "timelineEvents": count("timelineEvents"),
-        "latestJobId": job["id"] if job else None,
-    }
+                .where("status", "==", "MISSING_INFORMATION")
+                .count()
+                .get()
+            )
+            return res[0][0].value
+        except Exception:
+            return len(
+                [
+                    d
+                    for d in db.collection("cases")
+                    .document(case_id)
+                    .collection("references")
+                    .stream()
+                    if d.to_dict().get("status") == "MISSING_INFORMATION"
+                ]
+            )
+
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        f_docs = executor.submit(count_sub, "documents")
+        f_ev = executor.submit(count_sub, "evidence")
+        f_conf = executor.submit(count_sub, "conflicts")
+        f_refs = executor.submit(count_missing_refs)
+        f_time = executor.submit(count_sub, "timelineEvents")
+
+        result = {
+            "caseId": case_id,
+            "documentsAnalyzed": f_docs.result(),
+            "clausesExtracted": f_ev.result(),
+            "conflictsFound": f_conf.result(),
+            "missingReferences": f_refs.result(),
+            "timelineEvents": f_time.result(),
+            "latestJobId": job["id"] if job else None,
+        }
+
     return {"data": result}
+
