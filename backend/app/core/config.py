@@ -55,8 +55,12 @@ class Settings(BaseSettings):
         # Remove all whitespace, newlines, and literal "\n" from the payload
         key = key.replace("\\n", "").replace("\n", "").replace(" ", "")
         
+        # Split into 64-character chunks (standard PEM format)
+        chunks = [key[i:i+64] for i in range(0, len(key), 64)]
+        formatted_key = "\n".join(chunks)
+        
         # Reconstruct the valid PEM format
-        return f"-----BEGIN PRIVATE KEY-----\n{key}\n-----END PRIVATE KEY-----\n"
+        return f"-----BEGIN PRIVATE KEY-----\n{formatted_key}\n-----END PRIVATE KEY-----\n"
 
 
 @lru_cache
