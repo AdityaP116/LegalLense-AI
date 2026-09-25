@@ -41,22 +41,26 @@ class Settings(BaseSettings):
 
     @property
     def firebase_private_key_clean(self) -> str:
-        """Handle copy-paste errors (quotes, missing newlines, spaces) by reconstructing the PEM."""
-        key = self.firebase_private_key.strip()
-        if key.startswith('"') and key.endswith('"'):
-            key = key[1:-1]
-        elif key.startswith("'") and key.endswith("'"):
-            key = key[1:-1]
-            
-        # Remove headers and footers, leaving only the base64 payload
-        key = key.replace("-----BEGIN PRIVATE KEY-----", "")
-        key = key.replace("-----END PRIVATE KEY-----", "")
+        """Robustly extract the PEM key from any format (JSON, quoted, etc)."""
+        import re
         
-        # Remove all whitespace, newlines, and literal "\n" from the payload
-        key = key.replace("\\n", "").replace("\n", "").replace(" ", "")
+        raw_key = self.firebase_private_key
+        
+        # Try to find the content between BEGIN and END tags using regex
+        match = re.search(r'-----BEGIN PRIVATE KEY-----(.*?)-----END PRIVATE KEY-----', raw_key, re.DOTALL)
+        
+        if match:
+            # We found the tags, extract just the payload
+            payload = match.group(1)
+        else:
+            # No tags found, assume the user pasted just the base64 payload
+            payload = raw_key
+            
+        # Clean the payload: remove literal \n, actual newlines, spaces, and quotes
+        payload = payload.replace("\\n", "").replace("\n", "").replace(" ", "").replace('"', "").replace("'", "").replace("\\r", "").replace("\r", "")
         
         # Split into 64-character chunks (standard PEM format)
-        chunks = [key[i:i+64] for i in range(0, len(key), 64)]
+        chunks = [payload[i:i+64] for i in range(0, len(payload), 64)]
         formatted_key = "\n".join(chunks)
         
         # Reconstruct the valid PEM format
