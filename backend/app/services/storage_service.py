@@ -67,7 +67,7 @@ def download_file_bytes(bucket, storage_path: str) -> bytes:
     raise FileNotFoundError(f"File not found in storage: {storage_path}")
 
 
-def get_download_url(bucket, storage_path: str, filename: str) -> str:
+def get_download_url(bucket, storage_path: str, filename: str, token: str = "") -> str:
     """
     Generate signed Cloud Storage URL or local file stream endpoint fallback.
     """
@@ -84,4 +84,7 @@ def get_download_url(bucket, storage_path: str, filename: str) -> str:
             logger.warning("Could not generate Cloud Storage signed URL: %s", e)
 
     # Fallback endpoint URL
-    return f"/api/documents/raw/{storage_path}"
+    url = f"/api/documents/raw/{storage_path}"
+    if token:
+        url += f"?token={token}"
+    return url

@@ -1,5 +1,5 @@
 import logging
-from fastapi import APIRouter, BackgroundTasks, Depends, UploadFile, File
+from fastapi import APIRouter, BackgroundTasks, Depends, UploadFile, File, Request
 from google.cloud.firestore import Client
 
 from app.core.auth import get_current_user
@@ -127,21 +127,25 @@ def delete_document(
 @router.get("/documents/{document_id}/download-url", response_model=dict)
 def get_download_url(
     document_id: str,
+    request: Request,
     user: dict = Depends(get_current_user),
     db: Client = Depends(get_firestore),
     bucket=Depends(get_storage_bucket),
 ):
     """Return a signed URL or local fallback URL for direct browser viewing."""
     from app.services import storage_service
+    from fastapi import HTTPException
 
     doc = document_service.get_document(db, document_id, user["uid"])
     storage_path = doc.get("storagePath", "")
     filename = doc.get("filename", "")
     if not storage_path:
-        from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Storage path not found for document.")
 
-    url = storage_service.get_download_url(bucket, storage_path, filename)
+    auth_header = request.headers.get("Authorization", "")
+    token = auth_header.replace("Bearer ", "") if "Bearer " in auth_header else ""
+
+    url = storage_service.get_download_url(bucket, storage_path, filename, token)
     return {"data": {"url": url, "filename": filename}}
 
 
@@ -150,16 +154,32 @@ from fastapi.responses import Response
 @router.get("/documents/raw/{storage_path:path}")
 def get_raw_document(
     storage_path: str,
+    token: str = None,
     bucket=Depends(get_storage_bucket),
 ):
     """Stream document bytes directly from local storage fallback."""
     from app.services import storage_service
+    from fastapi import HTTPException
+    from firebase_admin import auth
+    
+    if not token:
+        raise HTTPException(status_code=401, detail="Missing token for direct access.")
+        
+    try:
+        decoded = auth.verify_id_token(token)
+        uid = decoded["uid"]
+    except Exception:
+        raise HTTPException(status_code=401, detail="Invalid or expired token.")
+
+    # Security: Ensure users can only download their own documents
+    if not storage_path.startswith(f"documents/{uid}/"):
+        raise HTTPException(status_code=403, detail="Not authorized to access this file.")
+        
     try:
         data = storage_service.download_file_bytes(bucket, storage_path)
         content_type = "application/pdf" if storage_path.endswith(".pdf") else "application/octet-stream"
         return Response(content=data, media_type=content_type)
     except Exception as e:
-        from fastapi import HTTPException
         raise HTTPException(status_code=404, detail=str(e))
 
 
