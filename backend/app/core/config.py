@@ -23,9 +23,9 @@ class Settings(BaseSettings):
     firebase_storage_bucket: str = ""
 
     # ── AI Provider ───────────────────────────────────────────────────────────
-    gemini_api_key: str = ""
+    gemini_api_key: str = "GEMINI_API_KEY"
     # "mock" returns controlled dev responses; "live" calls real Gemini API
-    ai_service_mode: str = "mock"
+    ai_service_mode: str = "live"
 
     # ── Server ────────────────────────────────────────────────────────────────
     cors_origins: str = "http://localhost:5173"

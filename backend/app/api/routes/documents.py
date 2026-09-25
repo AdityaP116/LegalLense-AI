@@ -60,8 +60,8 @@ def _process_document(db: Client, bucket, case_id: str, document_id: str):
 
         update_processing_status(db, case_id, document_id, "processing")
 
-        blob = bucket.blob(storage_path)
-        file_bytes = blob.download_as_bytes()
+        from app.services import storage_service
+        file_bytes = storage_service.download_file_bytes(bucket, storage_path)
 
         if mime_type == "application/pdf" or filename.lower().endswith(".pdf"):
             pages = extract_pdf(file_bytes, document_id, filename)
@@ -131,22 +131,36 @@ def get_download_url(
     db: Client = Depends(get_firestore),
     bucket=Depends(get_storage_bucket),
 ):
-    """Return a short-lived signed URL for direct browser download / viewing."""
-    import datetime as dt
+    """Return a signed URL or local fallback URL for direct browser viewing."""
+    from app.services import storage_service
 
     doc = document_service.get_document(db, document_id, user["uid"])
     storage_path = doc.get("storagePath", "")
+    filename = doc.get("filename", "")
     if not storage_path:
         from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Storage path not found for document.")
 
-    blob = bucket.blob(storage_path)
-    signed_url = blob.generate_signed_url(
-        expiration=dt.timedelta(minutes=60),
-        method="GET",
-        version="v4",
-    )
-    return {"data": {"url": signed_url, "filename": doc.get("filename", "")}}
+    url = storage_service.get_download_url(bucket, storage_path, filename)
+    return {"data": {"url": url, "filename": filename}}
+
+
+from fastapi.responses import Response
+
+@router.get("/documents/raw/{storage_path:path}")
+def get_raw_document(
+    storage_path: str,
+    bucket=Depends(get_storage_bucket),
+):
+    """Stream document bytes directly from local storage fallback."""
+    from app.services import storage_service
+    try:
+        data = storage_service.download_file_bytes(bucket, storage_path)
+        content_type = "application/pdf" if storage_path.endswith(".pdf") else "application/octet-stream"
+        return Response(content=data, media_type=content_type)
+    except Exception as e:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail=str(e))
 
 
 @router.post("/documents/{document_id}/process", response_model=dict)

@@ -80,16 +80,9 @@ async def upload_document(
         f"documents/{uid}/{case_id}/{document_id}/original/{filename}"
     )
 
-    # Upload to Firebase Storage
-    try:
-        blob = bucket.blob(storage_path)
-        blob.upload_from_string(file_bytes, content_type=mime_type)
-    except Exception as e:
-        logger.error("Storage upload failed: %s", e)
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="File upload to storage failed.",
-        )
+    # Upload using storage service (with automatic local fallback)
+    from app.services import storage_service
+    storage_service.upload_file_bytes(bucket, storage_path, file_bytes, content_type=mime_type)
 
     now = _now_iso()
     doc_data = {

@@ -6,7 +6,6 @@ Usage:
     def protected(user: dict = Depends(get_current_user)):
         return {"uid": user["uid"]}
 """
-
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from firebase_admin import auth
