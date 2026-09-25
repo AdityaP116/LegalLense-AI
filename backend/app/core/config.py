@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     ai_service_mode: str = "live"
 
     # ── Server ────────────────────────────────────────────────────────────────
-    cors_origins: str = "http://localhost:5173"
+    cors_origins: str = "http://localhost:5173,https://legallense-ai-1.onrender.com"
     max_upload_size_mb: int = 50
 
     @property
