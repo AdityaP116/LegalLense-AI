@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom"
 import { updateProfile, deleteUser } from "firebase/auth"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/AuthContext"
-import { auth } from "@/lib/firebase"
 
 type SettingsSection = "profile" | "privacy" | "about"
 
