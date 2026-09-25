@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useEffect, useState } from "react"
-import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth"
+import { onAuthStateChanged, signInWithRedirect, getRedirectResult, GoogleAuthProvider, signOut } from "firebase/auth"
 import type { User } from "firebase/auth"
 import { auth } from "@/lib/firebase"
 
@@ -18,6 +18,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // Handle the redirect result when the user comes back from Google
+    getRedirectResult(auth).catch((error) => {
+      console.error("Error handling redirect result", error)
+    })
+
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser)
       setLoading(false)
@@ -28,7 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider()
     try {
-      await signInWithPopup(auth, provider)
+      await signInWithRedirect(auth, provider)
     } catch (error) {
       console.error("Error signing in with Google", error)
       throw error
@@ -58,3 +63,4 @@ export const useAuth = () => {
   }
   return context
 }
+
