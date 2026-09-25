@@ -39,7 +39,7 @@ async function request<T>(
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: res.statusText }))
-    console.error(`API Error (${res.status}) on ${method} ${path}:`, err)
+    console.error(`API Error (${res.status}) on ${method} ${path}: ${JSON.stringify(err)}`)
     throw new Error(err.detail ?? "API error")
   }
 
