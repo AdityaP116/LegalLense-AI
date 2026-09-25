@@ -41,8 +41,22 @@ class Settings(BaseSettings):
 
     @property
     def firebase_private_key_clean(self) -> str:
-        """Handle escaped newlines that env vars sometimes produce."""
-        return self.firebase_private_key.replace("\\n", "\n")
+        """Handle copy-paste errors (quotes, missing newlines, spaces) by reconstructing the PEM."""
+        key = self.firebase_private_key.strip()
+        if key.startswith('"') and key.endswith('"'):
+            key = key[1:-1]
+        elif key.startswith("'") and key.endswith("'"):
+            key = key[1:-1]
+            
+        # Remove headers and footers, leaving only the base64 payload
+        key = key.replace("-----BEGIN PRIVATE KEY-----", "")
+        key = key.replace("-----END PRIVATE KEY-----", "")
+        
+        # Remove all whitespace, newlines, and literal "\n" from the payload
+        key = key.replace("\\n", "").replace("\n", "").replace(" ", "")
+        
+        # Reconstruct the valid PEM format
+        return f"-----BEGIN PRIVATE KEY-----\n{key}\n-----END PRIVATE KEY-----\n"
 
 
 @lru_cache
