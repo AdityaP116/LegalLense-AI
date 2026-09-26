@@ -56,8 +56,9 @@ class Settings(BaseSettings):
             # No tags found, assume the user pasted just the base64 payload
             payload = raw_key
             
-        # Clean the payload: remove literal \n, actual newlines, spaces, and quotes
-        payload = payload.replace("\\n", "").replace("\n", "").replace(" ", "").replace('"', "").replace("'", "").replace("\\r", "").replace("\r", "")
+        # Clean the payload: KEEP ONLY VALID BASE64 CHARACTERS (A-Z, a-z, 0-9, +, /, =)
+        # This completely eliminates issues with \n, \r, \t, quotes, spaces, or stray symbols.
+        payload = re.sub(r'[^A-Za-z0-9+/=]', '', payload)
         
         # Split into 64-character chunks (standard PEM format)
         chunks = [payload[i:i+64] for i in range(0, len(payload), 64)]
