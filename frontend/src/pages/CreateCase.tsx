@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { caseService } from "@/services/caseService"
@@ -13,7 +13,6 @@ export function CreateCase() {
   const [narrative, setNarrative] = useState("")
   const [goals, setGoals] = useState<string[]>([])
   const [files, setFiles] = useState<File[]>([])
-  const fileInputRef = useRef<HTMLInputElement>(null)
   
   const [isCreating, setIsCreating] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -144,8 +143,9 @@ export function CreateCase() {
         <h2 className="font-headline-md text-headline-md text-on-surface mb-2">Case Details</h2>
         
         <div className="flex flex-col gap-2">
-          <label className="font-label-md text-on-surface font-semibold">Case Title</label>
+          <label htmlFor="case-title" className="font-label-md text-on-surface font-semibold">Case Title</label>
           <input 
+            id="case-title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="p-3 bg-surface-container-low rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 text-on-surface"
@@ -157,25 +157,28 @@ export function CreateCase() {
           <label className="font-label-md text-on-surface font-semibold">Category</label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {categories.map((cat) => (
-              <div 
+              <button 
                 key={cat.id}
+                type="button"
                 onClick={() => setSelectedCategory(cat.id)}
+                aria-pressed={selectedCategory === cat.id}
                 className={`p-3 rounded-lg flex flex-col items-center gap-2 cursor-pointer transition-colors border ${
                   selectedCategory === cat.id 
                   ? 'bg-primary-container/20 border-primary text-primary' 
                   : 'bg-surface-container-low border-transparent hover:border-border text-on-surface-variant'
                 }`}
               >
-                <span className="material-symbols-outlined text-[24px]">{cat.icon}</span>
+                <span className="material-symbols-outlined text-[24px]" aria-hidden="true">{cat.icon}</span>
                 <span className="font-label-sm text-center font-medium">{cat.title}</span>
-              </div>
+              </button>
             ))}
           </div>
         </div>
 
         <div className="flex flex-col gap-2 mt-4">
-          <label className="font-label-md text-on-surface font-semibold">Describe your situation</label>
+          <label htmlFor="case-narrative" className="font-label-md text-on-surface font-semibold">Describe your situation</label>
           <textarea 
+            id="case-narrative"
             value={narrative}
             onChange={(e) => setNarrative(e.target.value)}
             className="p-3 bg-surface-container-low rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 resize-y min-h-[100px] text-on-surface"
@@ -214,33 +217,31 @@ export function CreateCase() {
           {files.map((file, idx) => (
             <div key={idx} className="flex items-center justify-between p-3 rounded-lg bg-surface-container-low border border-border">
               <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-primary">description</span>
+                <span className="material-symbols-outlined text-primary" aria-hidden="true">description</span>
                 <span className="text-on-surface text-sm font-medium">{file.name}</span>
               </div>
-              <button onClick={() => removeFile(idx)} className="text-on-surface-variant hover:text-error transition-colors p-1">
-                <span className="material-symbols-outlined text-[18px]">close</span>
+              <button type="button" onClick={() => removeFile(idx)} aria-label={`Remove ${file.name}`} className="text-on-surface-variant hover:text-error transition-colors p-1">
+                <span className="material-symbols-outlined text-[18px]" aria-hidden="true">close</span>
               </button>
             </div>
           ))}
         </div>
 
-        <div 
-          onClick={() => fileInputRef.current?.click()}
+        <label 
           onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
           onDrop={handleFileChange}
           className="mt-2 rounded-xl border-2 border-dashed border-outline-variant/30 hover:border-primary/50 hover:bg-surface-container/50 transition-all p-8 flex flex-col items-center justify-center gap-3 cursor-pointer text-on-surface-variant hover:text-primary group"
         >
           <input 
-            ref={fileInputRef}
             type="file" 
             multiple 
             accept=".pdf,.docx,.txt"
             onChange={handleFileChange}
             className="hidden" 
           />
-          <span className="material-symbols-outlined text-[32px] group-hover:scale-110 transition-transform">cloud_upload</span>
+          <span className="material-symbols-outlined text-[32px] group-hover:scale-110 transition-transform" aria-hidden="true">cloud_upload</span>
           <span className="font-medium">Upload Documents (PDF, DOCX)</span>
-        </div>
+        </label>
       </section>
 
       {/* Privacy & AI Consent */}

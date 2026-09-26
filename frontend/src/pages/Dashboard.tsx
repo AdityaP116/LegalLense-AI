@@ -147,8 +147,8 @@ export function Dashboard() {
               )}
             </div>
             <div className="flex items-center gap-2">
-              <button className="text-on-surface-variant hover:text-on-surface p-1.5 rounded bg-surface-container-low transition-colors" onClick={fetchCases}>
-                <span className="material-symbols-outlined text-[18px]">refresh</span>
+              <button aria-label="Refresh cases" className="text-on-surface-variant hover:text-on-surface p-1.5 rounded bg-surface-container-low transition-colors" onClick={fetchCases}>
+                <span className="material-symbols-outlined text-[18px]" aria-hidden="true">refresh</span>
               </button>
             </div>
           </div>
@@ -156,9 +156,10 @@ export function Dashboard() {
           {loading ? (
             <div className="p-space-xl text-center text-on-surface-variant">Loading cases...</div>
           ) : cases.length === 0 ? (
-            <div 
+            <button 
+              type="button"
               onClick={handleCreateCase}
-              className="rounded-xl border-2 border-dashed border-outline-variant/30 glass hover:bg-surface-container/50 hover:border-primary/50 transition-all duration-300 p-space-xl flex flex-col sm:flex-row items-center justify-between gap-space-lg text-center sm:text-left cursor-pointer group hover:shadow-[0_0_30px_rgba(var(--primary),0.1)] hover:-translate-y-1"
+              className="w-full rounded-xl border-2 border-dashed border-outline-variant/30 glass hover:bg-surface-container/50 hover:border-primary/50 transition-all duration-300 p-space-xl flex flex-col sm:flex-row items-center justify-between gap-space-lg text-center sm:text-left cursor-pointer group hover:shadow-[0_0_30px_rgba(var(--primary),0.1)] hover:-translate-y-1"
             >
               <div className="flex items-center gap-space-lg">
                 <div className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-primary shrink-0 group-hover:scale-110 group-hover:text-glow transition-all duration-300">
@@ -169,13 +170,12 @@ export function Dashboard() {
                   <p className="font-body-md text-body-md text-on-surface-variant">Click here to start your first case and upload documents.</p>
                 </div>
               </div>
-            </div>
+            </button>
           ) : (
             cases.map((c) => (
               <div 
                 key={c.id}
-                onClick={() => navigate(`/case/${c.id}`)}
-                className="glass rounded-xl shadow-lg hover:shadow-[0_0_25px_rgba(var(--primary),0.15)] transition-all duration-300 p-space-lg lg:p-space-xl flex flex-col gap-space-md border border-border hover:border-primary/30 group cursor-pointer hover:-translate-y-1"
+                className="glass rounded-xl shadow-lg hover:shadow-[0_0_25px_rgba(var(--primary),0.15)] transition-all duration-300 p-space-lg lg:p-space-xl flex flex-col gap-space-md border border-border hover:border-primary/30 group"
               >
                 <div className="flex flex-wrap items-center justify-between gap-space-sm">
                   <div className="flex items-center gap-space-sm">
@@ -204,9 +204,9 @@ export function Dashboard() {
                 </div>
 
                 <div className="flex flex-wrap items-center justify-end gap-space-sm pt-space-xs">
-                  <Button size="sm" className="gap-1.5 px-space-lg">
+                  <Button size="sm" className="gap-1.5 px-space-lg" onClick={() => navigate(`/case/${c.id}`)}>
                     Open Workspace
-                    <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                    <span className="material-symbols-outlined text-[16px]" aria-hidden="true">arrow_forward</span>
                   </Button>
                 </div>
               </div>
