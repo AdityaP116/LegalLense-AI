@@ -13,7 +13,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 
 from app.core.config import get_settings
 from app.core.firebase import get_firebase_app
@@ -81,6 +81,10 @@ def health():
         "version": "1.0.0",
         "aiMode": settings.ai_service_mode,
     }
+
+@app.get("/", include_in_schema=False)
+def root():
+    return RedirectResponse(url="/docs")
 
 
 # ── Global Exception Handlers ─────────────────────────────────────────────────

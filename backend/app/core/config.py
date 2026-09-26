@@ -46,8 +46,11 @@ class Settings(BaseSettings):
         
         raw_key = self.firebase_private_key
         
+        # Unescape literal \n if they exist from environment variables
+        raw_key = raw_key.replace('\\n', '\n')
+        
         # Try to find the content between BEGIN and END tags using regex
-        match = re.search(r'-----BEGIN PRIVATE KEY-----(.*?)-----END PRIVATE KEY-----', raw_key, re.DOTALL)
+        match = re.search(r'-----BEGIN [A-Z ]*PRIVATE KEY-----(.*?)-----END [A-Z ]*PRIVATE KEY-----', raw_key, re.DOTALL)
         
         if match:
             # We found the tags, extract just the payload
