@@ -4,9 +4,7 @@ import { analysisService } from '@/services/analysisService'
 import { DocumentViewer } from './DocumentViewer'
 import type { LegalDocument } from '@/types'
 
-const ALLOWED_TYPES = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
-const ALLOWED_EXTS = ['.pdf', '.docx']
-const MAX_SIZE_MB = 50
+import { validateFile, MAX_SIZE_MB } from '@/lib/fileValidation'
 
 function statusLabel(status: string) {
   const map: Record<string, { label: string; cls: string }> = {
@@ -41,26 +39,20 @@ export function Documents({ caseId }: { caseId: string }) {
 
   useEffect(() => {
     loadDocuments()
-    // Poll while any doc is processing
-    const timer = setInterval(async () => {
-      const docs = await documentService.list(caseId).catch(() => [] as LegalDocument[])
-      setDocuments(docs)
-      const anyProcessing = docs.some(d => d.processingStatus === 'processing' || d.processingStatus === 'uploaded')
-      if (!anyProcessing) clearInterval(timer)
-    }, 4000)
-    return () => clearInterval(timer)
-  }, [caseId, loadDocuments])
+  }, [loadDocuments])
 
-  const validateFile = (file: File): string | null => {
-    const ext = '.' + file.name.split('.').pop()?.toLowerCase()
-    if (!ALLOWED_EXTS.includes(ext) && !ALLOWED_TYPES.includes(file.type)) {
-      return `"${file.name}" is not supported. Please upload PDF or DOCX files only.`
-    }
-    if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-      return `"${file.name}" is too large. Maximum file size is ${MAX_SIZE_MB}MB.`
-    }
-    return null
-  }
+  useEffect(() => {
+    const anyProcessing = documents.some(d => d.processingStatus === 'processing' || d.processingStatus === 'uploaded')
+    if (!anyProcessing) return
+
+    const timer = setInterval(() => {
+      loadDocuments()
+    }, 4000)
+    
+    return () => clearInterval(timer)
+  }, [documents, loadDocuments])
+
+
 
   const handleUpload = async (files: File[]) => {
     setError(null)

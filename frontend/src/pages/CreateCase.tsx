@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { caseService } from "@/services/caseService"
 import { documentService } from "@/services/documentService"
 import { analysisService } from "@/services/analysisService"
+import { validateFile } from "@/lib/fileValidation"
 
 export function CreateCase() {
   const navigate = useNavigate()
@@ -26,19 +27,7 @@ export function CreateCase() {
     { id: "other", icon: "more_horiz", title: "Other" },
   ]
 
-  const MAX_SIZE_MB = 50;
-  const ALLOWED_EXTS = ['.pdf', '.docx'];
 
-  const validateFile = (file: File): string | null => {
-    const ext = '.' + file.name.split('.').pop()?.toLowerCase();
-    if (!ALLOWED_EXTS.includes(ext!)) {
-      return `"${file.name}" is not supported. Please upload PDF or DOCX files only.`;
-    }
-    if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-      return `"${file.name}" is too large. Maximum size is ${MAX_SIZE_MB}MB.`;
-    }
-    return null;
-  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement> | React.DragEvent) => {
     e.preventDefault();
