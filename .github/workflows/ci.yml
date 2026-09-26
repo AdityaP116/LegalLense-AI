@@ -1,0 +1,52 @@
+name: LegalLens CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Backend Checks
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      
+      - name: Install backend dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+          
+      # Frontend Checks
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+        
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build
+        
+  deploy-to-render:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Trigger Render Deployment
+        # NOTE: To use this, add RENDER_DEPLOY_HOOK_URL to your GitHub Repository Secrets!
+        # You can get this URL from your Render Dashboard -> Settings -> Deploy Hook
+        if: env.RENDER_DEPLOY_HOOK_URL != ''
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
