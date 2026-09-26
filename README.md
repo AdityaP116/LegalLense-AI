@@ -1,57 +1,91 @@
-# ⚖️ LegalLens AI — Legal Document Analysis & Evidentiary Intelligence Platform
+# LegalLens
 
-LegalLens AI is a modern, enterprise-grade AI legal assistant that parses, analyzes, and cross-references complex legal documents. Built with **FastAPI**, **React**, **Firebase**, and **Google Gemini AI**, LegalLens automatically identifies contract clauses, detects cross-document contradictions, builds chronological timelines, and calculates an **Evidentiary Health Score** for your legal cases.
+> AI-powered legal document analysis that transforms complex documents into clear, evidence-backed briefs and actionable insights.
 
----
+*(Disclaimer: LegalLens is designed for preparation and analysis purposes only. It is not a substitute for a qualified legal professional and does not provide legally binding advice.)*
 
-## ✨ Features
+## Table of Contents
 
-- 🔍 **Vector Search RAG (Retrieval-Augmented Generation)**
-  Uses Google Gemini `text-embedding-004` to index document chunks and perform semantic similarity search, grounding AI answers with exact source citations.
-
-- ⚠️ **Generalized Conflict Detection**
-  LLM-powered cross-document analysis that finds contradictions across any topic — notice periods, liability caps, jurisdiction, non-compete terms, or payment schedules.
-
-- 📄 **Native Document Viewer**
-  Slide-over document preview panel supporting native PDF rendering in sandboxed preview mode with page-level jumping, extracted text review, and evidence highlighting.
-
-- 📊 **Dynamic Evidentiary Health Score**
-  Real-time case health calculation based on verified evidence, identified conflicts, missing document references, and unverified claims.
-
-- 💬 **Grounded Legal AI Chat**
-  Interactive chat interface allowing attorneys and legal analysts to query document sets with precise source document and page attribution.
-
-- 📅 **Automated Timeline Extraction**
-  Extracts critical dates, effective periods, and milestone events into a unified chronological case timeline.
-
-- 🔒 **Privacy & AI Processing Consent**
-  Built-in compliance checks requiring explicit user consent for secure cloud storage and AI contract processing prior to analysis.
-
-- ⚙️ **User Settings & Privacy Controls**
-  Profile management, storage usage statistics, data export options, and secure account deletion.
+- [Overview](#overview)
+- [Problem Statement](#problem-statement)
+- [Solution](#solution)
+- [Key Features](#key-features)
+- [Application Workflow](#application-workflow)
+- [Architecture & Tech Stack](#architecture--tech-stack)
+- [Project Structure](#project-structure)
+- [Quick Start Guide](#quick-start-guide)
+- [Security & Data Privacy](#security--data-privacy)
+- [License](#license)
 
 ---
 
-## 🛠️ Architecture & Tech Stack
+## Overview
 
+LegalLens is a modern AI legal assistant designed to parse, analyze, and cross-reference complex legal documents. Built for users needing to prepare for legal consultations or internal review, the platform automatically identifies contract clauses, detects cross-document contradictions, builds chronological timelines, and generates a structured, evidence-backed brief from uploaded files.
+
+---
+
+## Problem Statement
+
+Legal documents and workplace contracts are often dense, making it difficult to understand obligations, key dates, or hidden liabilities. Important clauses can be buried in complex language, and manually reviewing multiple documents for contradictions can be exceptionally time-consuming. Users without legal training may struggle to identify critical information, leaving them unprepared for formal legal consultations or negotiations.
+
+---
+
+## Solution
+
+LegalLens provides a structured, automated approach to document review:
+
+1. User authenticates securely via Firebase.
+2. User creates a dedicated case workspace tailored to their situation.
+3. User uploads relevant documents (PDF/DOCX) to the secure storage.
+4. The backend automatically parses and chunks the text, generating vector embeddings.
+5. Google Gemini AI analyzes the combined text to extract timelines, obligations, and detect cross-document conflicts.
+6. A comprehensive, easy-to-read brief is generated, directly citing source pages.
+7. Users can interact with the grounded AI chat for further questions and follow-up analysis.
+
+---
+
+## Key Features
+
+- **User Authentication:** Secure login and session management powered by Firebase.
+- **Case/Workspace Management:** Isolated workspaces to track individual legal scenarios.
+- **Document Upload & File Validation:** Secure document ingestion with format (.pdf, .docx) and size validation (up to 50MB).
+- **Document Processing:** Backend automated extraction and chunking of complex documents.
+- **AI-Powered Analysis:** Extraction of key facts, obligations, and timelines using Google Gemini.
+- **Conflict Detection:** Automated cross-document analysis that flags contradictions (e.g., mismatched notice periods).
+- **Brief Generation:** Automated compilation of an evidence-backed preparation brief.
+- **Vector Search RAG:** Semantic similarity search grounded with exact source citations for interactive Q&A.
+- **Native Document Viewer:** Slide-over preview panel to read documents and verify citations natively.
+- **Error Handling:** Graceful API and AI error handling with clear, user-friendly UI feedback.
+- **Responsive Interface:** Modern, mobile-friendly UI built with TailwindCSS.
+- **Accessibility Support:** Semantic HTML, ARIA integrations, and keyboard-accessible Radix components.
+
+---
+
+## Application Workflow
+
+```mermaid
+flowchart TD
+    A[User Login] --> B[Dashboard]
+    B --> C[Create or Open Case Workspace]
+    C --> D[Upload Document]
+    D --> E[Document Parsing & Embedding]
+    E --> F[AI Context & Conflict Analysis]
+    F --> G[Generate Evidence-Backed Brief]
+    G --> H[Review Results & Verified Citations]
+    H --> I[Interactive AI Q&A Chat]
 ```
-                     ┌─────────────────────────────────────────┐
-                     │           React 19 + Vite UI            │
-                     │   (TailwindCSS / Material Symbols)      │
-                     └────────────────────┬────────────────────┘
-                                          │  REST API (Bearer Token)
-                                          ▼
-                     ┌─────────────────────────────────────────┐
-                     │            FastAPI Backend              │
-                     └──────────┬───────────────────┬──────────┘
-                                │                   │
-                                ▼                   ▼
-                    ┌──────────────────────┐   ┌──────────────────────┐
-                    │  Google Gemini AI    │   │  Firebase Ecosystem  │
-                    │  • 1.5 Flash / Pro   │   │  • Authentication    │
-                    │  • text-embedding-004│   │  • Cloud Firestore   │
-                    └──────────────────────┘   │  • Cloud Storage     │
-                                               └──────────────────────┘
+
+---
+
+## Architecture & Tech Stack
+
+```mermaid
+flowchart LR
+    A[React 19 UI] <-->|REST API| B[FastAPI Backend]
+    B <--> C[Firebase Auth & Storage]
+    B <--> D[Firestore Database]
+    B <--> E[Google Gemini AI]
 ```
 
 ### Frontend Stack
@@ -59,18 +93,20 @@ LegalLens AI is a modern, enterprise-grade AI legal assistant that parses, analy
 - **Styling**: TailwindCSS, Radix UI primitives, Lucide Icons, Material Symbols
 - **Authentication**: Firebase Web SDK
 - **Routing**: React Router v7
+- **Testing**: Vitest & React Testing Library
 
 ### Backend Stack
 - **Framework**: Python 3.11+ / FastAPI / Uvicorn
-- **AI Engine**: Google Gemini API (`google-genai`), NumPy cosine similarity
-- **Database & Storage**: Firebase Admin SDK (`firebase-admin`), Firestore, Google Cloud Storage
-- **Parsers**: PyPDF2, python-docx
+- **AI Engine**: Google Gemini API (`google-genai`), NumPy cosine similarity for RAG
+- **Database & Storage**: Firebase Admin SDK, Firestore, Google Cloud Storage
+- **Parsers**: PyMuPDF, python-docx
+- **Testing**: Pytest & httpx
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
-```
+```text
 LegalLense-AI/
 ├── backend/
 │   ├── app/
@@ -85,10 +121,10 @@ LegalLense-AI/
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── components/         # Modular UI components (DocumentViewer, Case tabs, Navbar, Sidebar)
+│   │   ├── components/         # Modular UI components (DocumentViewer, Case tabs, Navbar)
 │   │   ├── contexts/           # Auth & application state providers
-│   │   ├── lib/                # API client & Firebase config
-│   │   ├── pages/              # Main route views (Dashboard, CaseDetail, CreateCase, Settings)
+│   │   ├── lib/                # Shared utilities & file validation
+│   │   ├── pages/              # Main route views (Dashboard, CaseWorkspace, CreateCase)
 │   │   └── services/           # Frontend API services
 │   ├── package.json            # Node.js dependencies
 │   └── vite.config.ts          # Vite build configuration
@@ -100,7 +136,7 @@ LegalLense-AI/
 
 ---
 
-## 🚦 Quick Start Guide
+## Quick Start Guide
 
 ### Prerequisites
 - **Node.js**: v18.0.0 or higher
@@ -189,31 +225,15 @@ LegalLense-AI/
 
 ---
 
-## 📡 Key API Endpoints
+## Security & Data Privacy
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/health` | Server health check |
-| `GET` / `POST` | `/api/cases` | List user cases / Create new legal case |
-| `GET` / `DELETE`| `/api/cases/{id}` | Retrieve or delete specific case |
-| `POST` | `/api/cases/{id}/documents` | Upload PDF/DOCX file & parse chunks |
-| `GET` | `/api/documents/{id}/download-url` | Generate signed GCS URL for document viewing |
-| `POST` | `/api/cases/{id}/analyze` | Trigger full AI analysis pipeline |
-| `GET` | `/api/cases/{id}/analysis/status` | Poll active analysis job progress |
-| `GET` | `/api/cases/{id}/evidence` | List extracted legal evidence & clauses |
-| `GET` | `/api/cases/{id}/conflicts` | List cross-document contradictions |
-| `POST` | `/api/cases/{id}/chat` | Ask Q&A question grounded via RAG vector search |
+- **Firebase ID Token Validation**: All API routes verify incoming standard `Authorization: Bearer <id_token>` headers via the Firebase Admin SDK.
+- **Signed GCS Downloads**: Original contract documents are stored securely in Cloud Storage and served via short-lived signed URLs directly to the authenticated user.
+- **User Ownership Scoping**: Firestore collections enforce ownership checks, preventing cross-tenant data access.
+- **Consent Gates**: Users must agree to explicit data storage and AI processing consent before initiating case analysis.
 
 ---
 
-## 🔐 Security & Data Privacy
+## License
 
-- **Firebase ID Token Validation**: All API routes verify incoming standard `Authorization: Bearer <id_token>` headers.
-- **Signed GCS Downloads**: Original contract documents are stored securely in Cloud Storage and served via short-lived signed URLs.
-- **User Ownership Scoping**: Firestore collections enforce ownership checks preventing cross-tenant data access.
-
----
-
-## 📄 License
-
-Copyright © 2026 LegalLens AI. All rights reserved.
+Copyright © 2026 LegalLens. All rights reserved.
