@@ -3,10 +3,16 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "@/contexts/AuthContext"
 
 export const Login: React.FC = () => {
-  const { signInWithGoogle } = useAuth()
+  const { signInWithGoogle, user } = useAuth()
   const navigate = useNavigate()
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+
+  React.useEffect(() => {
+    if (user) {
+      navigate("/")
+    }
+  }, [user, navigate])
 
   const handleGoogleSignIn = async () => {
     try {

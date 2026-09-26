@@ -26,6 +26,7 @@ describe('Login Component', () => {
     vi.clearAllMocks();
     (AuthContext.useAuth as any).mockReturnValue({
       signInWithGoogle: mockSignInWithGoogle,
+      user: null,
     });
     (ReactRouter.useNavigate as any).mockReturnValue(mockNavigate);
   });
