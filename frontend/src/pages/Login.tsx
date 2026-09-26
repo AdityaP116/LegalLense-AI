@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { Shield } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 
 export const Login: React.FC = () => {
@@ -25,10 +24,8 @@ export const Login: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans text-slate-900">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex justify-center">
-          <div className="h-16 w-16 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg transform rotate-3">
-            <Shield className="h-10 w-10 text-white transform -rotate-3" />
-          </div>
+        <div className="flex justify-center mb-4">
+          <img src="/logo.jpg" alt="LegalLens Logo" className="h-24 w-auto drop-shadow-md rounded-xl" />
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-900">
           Sign in to LegalLens

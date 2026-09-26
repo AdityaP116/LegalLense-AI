@@ -13,10 +13,7 @@ export function Sidebar() {
           className="h-16 px-space-md flex items-center gap-space-sm bg-transparent border-b border-border/50 cursor-pointer"
           onClick={() => navigate("/")}
         >
-          <div className="flex flex-col">
-            <span className="font-headline-xl-mobile text-headline-xl-mobile text-on-surface leading-none tracking-tighter text-glow">LegalLens</span>
-            <span className="font-label-sm text-label-sm text-primary tracking-widest uppercase mt-0.5">Evidentiary Engine</span>
-          </div>
+          <img src="/logo.jpg" alt="LegalLens Logo" className="h-10 w-auto object-contain" />
         </div>
 
         {/* Global Nav */}

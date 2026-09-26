@@ -59,13 +59,7 @@ export function DocumentIntelligenceDashboard() {
           className="h-16 px-6 flex items-center gap-3 border-b border-slate-800/50 cursor-pointer"
           onClick={() => navigate('/')}
         >
-          <div className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/20">
-            L
-          </div>
-          <div className="flex flex-col">
-            <span className="font-semibold text-white tracking-tight">LegalLens</span>
-            <span className="text-[10px] text-slate-400 font-medium tracking-wider uppercase">Legal Intelligence Platform</span>
-          </div>
+          <img src="/logo.jpg" alt="LegalLens Logo" className="h-10 w-auto object-contain rounded-md" />
         </div>
 
         <div className="flex-1 overflow-y-auto py-6 px-4">
